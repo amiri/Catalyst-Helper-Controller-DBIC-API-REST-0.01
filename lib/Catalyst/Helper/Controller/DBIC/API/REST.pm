@@ -105,7 +105,7 @@ Catalyst::Helper::Controller::DBIC::API::REST
 
 =head1 DESCRIPTION
 
-  This creates REST controllers for all the classes in your Catalyst app.
+  This creates REST controllers for all the classes in your Catalyst app. Your application should access your model at myapp::Model::DB. If your result classes are not at that location, this will probably still work, but not optimally.
 
 =head1 AUTHOR
 
@@ -153,18 +153,22 @@ package [% class %];
 use base 'Catalyst::Controller::DBIC::API::REST';
 
 __PACKAGE__->config(
-    action => { setup => { PathPart => '[% class_name  %]', Chained => '/api/rest/rest_base' } }, # define parent chain action and partpath
-    class => '[% result_class %]', # DBIC result class
-    create_requires => [qw/[% create_requires %]/], # columns required to create
-    create_allows => [qw/[% create_allows %]/], # additional non-required columns that create allows
-    update_allows => [qw/[% update_allows %]/], # columns that update allows
-    list_returns => [qw/[% list_returns %]/], # columns that list returns
-    list_prefetch => [qw/[% list_prefetch  %]/], # relationships that are prefetched when no prefetch param is passed
-    list_prefetch_allows => [ # every possible prefetch param allowed
-        qw/[% list_prefetch_allows %]/,
+    action                  =>  { setup => { PathPart => '[% class_name  %]', Chained => '/api/rest/rest_base' } },
+                                # define parent chain action and partpath
+    class                   =>  'DB::[% result_class %]', # DBIC result class
+    create_requires         =>  [qw/[% create_requires %]/], # columns required to create
+    create_allows           =>  [qw/[% create_allows %]/], # additional non-required columns that create allows
+    update_allows           =>  [qw/[% update_allows %]/], # columns that update allows
+    list_returns            =>  [qw/[% list_returns %]/], # columns that list returns
+    list_prefetch           =>  [qw/[% list_prefetch  %]/], # relationships that are prefetched
+                                                            # when no prefetch param is passed
+    list_prefetch_allows    =>  [ # every possible prefetch param allowed
+        qw/
+            [% list_prefetch_allows %]
+          /,
     ],
-    list_ordered_by => [qw/[% list_ordered_by %]/], # order of generated list
-    list_search_exposes => [qw/[% list_search_exposes %]/], # columns that can be searched on via list
+    list_ordered_by         => [qw/[% list_ordered_by %]/], # order of generated list
+    list_search_exposes     => [qw/[% list_search_exposes %]/], # columns that can be searched on via list
 );
 
 =head1 NAME

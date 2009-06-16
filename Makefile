@@ -18,9 +18,9 @@
 #     PL_FILES => {  }
 #     PREREQ_PM => { Catalyst::Controller::DBIC::API::REST=>q[0], Catalyst::Controller::DBIC::API=>q[0], Test::More=>q[0], DBIx::Class::Schema=>q[0], Data::Dumper=>q[0], ExtUtils::MakeMaker=>q[6.42] }
 #     VERSION => q[0.01]
-#     dist => { PREOP=>q[$(PERL) -I. "-MModule::Install::Admin" -e "dist_preop(q($(DISTVNAME)))"] }
+#     dist => {  }
 #     realclean => { FILES=>q[MYMETA.yml] }
-#     test => { TESTS=>q[t/*.t xt/*.t] }
+#     test => { TESTS=>q[t/*.t] }
 
 # --- MakeMaker post_initialize section:
 
@@ -244,7 +244,7 @@ ZIPFLAGS = -r
 COMPRESS = gzip --best
 SUFFIX = .gz
 SHAR = shar
-PREOP = $(PERL) -I. "-MModule::Install::Admin" -e "dist_preop(q($(DISTVNAME)))"
+PREOP = $(NOECHO) $(NOOP)
 POSTOP = $(NOECHO) $(NOOP)
 TO_UNIX = $(NOECHO) $(NOOP)
 CI = ci -u
@@ -735,7 +735,7 @@ $(MAKE_APERL_FILE) : $(FIRST_MAKEFILE) pm_to_blib
 TEST_VERBOSE=0
 TEST_TYPE=test_$(LINKTYPE)
 TEST_FILE = test.pl
-TEST_FILES = t/*.t xt/*.t
+TEST_FILES = t/*.t
 TESTDB_SW = -d
 
 testdb :: testdb_$(LINKTYPE)
@@ -795,25 +795,6 @@ pm_to_blib : $(TO_INST_PM)
 
 # End.
 # Postamble by Module::Install 0.91
-# --- Module::Install::Admin::Makefile section:
-
-realclean purge ::
-	$(RM_F) $(DISTVNAME).tar$(SUFFIX)
-	$(RM_F) MANIFEST.bak _build
-	$(PERL) "-Ilib" "-MModule::Install::Admin" -e "remove_meta()"
-	$(RM_RF) inc
-
-reset :: purge
-
-upload :: test dist
-	cpan-upload -verbose $(DISTVNAME).tar$(SUFFIX)
-
-grok ::
-	perldoc Module::Install
-
-distsign ::
-	cpansign -s
-
 # --- Module::Install::AutoInstall section:
 
 config :: installdeps
