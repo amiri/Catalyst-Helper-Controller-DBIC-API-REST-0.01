@@ -16,7 +16,7 @@
 #     NAME => q[Catalyst::Helper::Controller::DBIC::API::REST]
 #     NO_META => q[1]
 #     PL_FILES => {  }
-#     PREREQ_PM => { Test::More=>q[0], ExtUtils::MakeMaker=>q[6.42] }
+#     PREREQ_PM => { Catalyst::Controller::DBIC::API::REST=>q[0], Catalyst::Controller::DBIC::API=>q[0], Test::More=>q[0], DBIx::Class::Schema=>q[0], Data::Dumper=>q[0], ExtUtils::MakeMaker=>q[6.42] }
 #     VERSION => q[0.01]
 #     dist => { PREOP=>q[$(PERL) -I. "-MModule::Install::Admin" -e "dist_preop(q($(DISTVNAME)))"] }
 #     realclean => { FILES=>q[MYMETA.yml] }
@@ -766,6 +766,10 @@ ppd :
 	$(NOECHO) $(ECHO) '    <ABSTRACT></ABSTRACT>' >> $(DISTNAME).ppd
 	$(NOECHO) $(ECHO) '    <AUTHOR>Amiri Barksdale &lt;amiri@metalabel.com&gt;</AUTHOR>' >> $(DISTNAME).ppd
 	$(NOECHO) $(ECHO) '    <IMPLEMENTATION>' >> $(DISTNAME).ppd
+	$(NOECHO) $(ECHO) '        <DEPENDENCY NAME="Catalyst-Controller-DBIC-API" VERSION="0,0,0,0" />' >> $(DISTNAME).ppd
+	$(NOECHO) $(ECHO) '        <DEPENDENCY NAME="Catalyst-Controller-DBIC-API-REST" VERSION="0,0,0,0" />' >> $(DISTNAME).ppd
+	$(NOECHO) $(ECHO) '        <DEPENDENCY NAME="DBIx-Class-Schema" VERSION="0,0,0,0" />' >> $(DISTNAME).ppd
+	$(NOECHO) $(ECHO) '        <DEPENDENCY NAME="Data-Dumper" VERSION="0,0,0,0" />' >> $(DISTNAME).ppd
 	$(NOECHO) $(ECHO) '        <DEPENDENCY NAME="ExtUtils-MakeMaker" VERSION="6,42,0,0" />' >> $(DISTNAME).ppd
 	$(NOECHO) $(ECHO) '        <DEPENDENCY NAME="Test-More" VERSION="0,0,0,0" />' >> $(DISTNAME).ppd
 	$(NOECHO) $(ECHO) '        <OS NAME="$(OSNAME)" />' >> $(DISTNAME).ppd
@@ -809,4 +813,15 @@ grok ::
 
 distsign ::
 	cpansign -s
+
+# --- Module::Install::AutoInstall section:
+
+config :: installdeps
+	$(NOECHO) $(NOOP)
+
+checkdeps ::
+	$(PERL) Makefile.PL --checkdeps
+
+installdeps ::
+	$(NOECHO) $(NOOP)
 

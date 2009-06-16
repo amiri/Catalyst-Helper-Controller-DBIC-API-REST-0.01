@@ -19,6 +19,11 @@ no_index:
     - inc
     - t
     - xt
+requires:
+  Catalyst::Controller::DBIC::API: 0
+  Catalyst::Controller::DBIC::API::REST: 0
+  DBIx::Class::Schema: 0
+  Data::Dumper: 0
 resources:
   license: http://dev.perl.org/licenses/
 version: 0.01
