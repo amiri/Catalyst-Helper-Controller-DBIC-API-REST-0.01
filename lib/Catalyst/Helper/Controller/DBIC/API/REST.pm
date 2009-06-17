@@ -50,8 +50,7 @@ sub mk_compclass {
                         . "::API::REST::"
                         . $source;
             $result_class = $helper->{app}
-                        . "::"
-                        . "Model::DB::"
+                        . "::Model::DB::"
                         . $source; 
 
             ### Declare config vars
