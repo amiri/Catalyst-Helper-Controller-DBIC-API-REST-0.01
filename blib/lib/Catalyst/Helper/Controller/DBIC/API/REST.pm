@@ -2,13 +2,49 @@ package Catalyst::Helper::Controller::DBIC::API::REST;
 
 use strict;
 use FindBin;
+use File::Spec;
+use Data::Dumper;
 use lib "$FindBin::Bin/../lib";
 our $VERSION = '0.01';
+
+=head1 NAME
+
+Catalyst::Helper::Controller::DBIC::API::REST
+
+=head1 VERSION
+
+Version 0.01
+
+=head1 SYNOPSIS
+
+    $ catalyst.pl myapp
+    $ cd myapp
+    $ script/myapp_create.pl controller API::REST DBIC::API::REST myapp
+
+=head1 DESCRIPTION
+
+  This creates REST controllers for all the classes in your Catalyst app. Your application should access your model at myapp::Model::DB. If your result classes are not at that location, this will probably still work, but not optimally.
+
+=cut
+
+=over
+
+=item mk_compclass
+
+This is the meat of the helper. It writes the API.pm, REST.pm and result class controllers. It replaces $helper->{} values as it goes through, rendering the files for each.
+
+=cut
 
 sub mk_compclass {
     my ( $self, $helper, $schema_class ) = @_;
     $helper->{schema_class} = $schema_class;
 
+    print "Script and prefix: ", $helper->{script}, " ", $helper->{appprefix}, "\n";
+    print "Helper: ", Dumper $helper;
+    $helper->{script} = File::Spec->catdir( $helper->{dir}, 'script' ); 
+    $helper->{appprefix} = Catalyst::Utils::appprefix($helper->{name});
+    print "Script and prefix: ", $helper->{script}, " ", $helper->{appprefix}, "\n";
+    print "Helper: ", Dumper $helper;
         ## Connect to schema for class info
         my $schema_file = "$schema_class\/Schema";
         require "$schema_file.pm";
@@ -24,7 +60,9 @@ sub mk_compclass {
         (my $api_path = $api_file) =~ s/\.pm$//;
         $helper->mk_dir($api_path);
         $helper->render_file('apibase', $api_file);
-        
+        $helper->{test} = $helper->next_test('API');
+        $helper->_mk_comptest;
+
         ## Make rest base
         my $rest_file = "$FindBin::Bin/../lib/"
                         . $helper->{app}
@@ -34,6 +72,8 @@ sub mk_compclass {
         (my $rest_path = $rest_file) =~ s/\.pm$//;
         $helper->mk_dir($rest_path);
         $helper->render_file('restbase', $rest_file);
+        $helper->{test} = $helper->next_test('API_REST');
+        $helper->_mk_comptest;
     
         ## Make result class controllers
         for my $source ($schema->sources) {
@@ -50,8 +90,7 @@ sub mk_compclass {
                         . "::API::REST::"
                         . $source;
             $result_class = $helper->{app}
-                        . "::"
-                        . "Model::DB::"
+                        . "::Model::DB::"
                         . $source; 
 
             ### Declare config vars
@@ -88,24 +127,14 @@ sub mk_compclass {
             $helper->{list_prefetch_allows} = join(' ', @list_prefetch_allows);
             $helper->{list_ordered_by} = join(' ', @list_ordered_by);
             $helper->render_file( 'compclass', $file );
+            $helper->{test} = $helper->next_test($source);
+            $helper->_mk_comptest;
         }
 }
 
 1;
 
-=head1 NAME
-
-Catalyst::Helper::Controller::DBIC::API::REST
-
-=head1 SYNOPSIS
-
-    $ catalyst.pl myapp
-    $ cd myapp
-    $ script/myapp_create.pl controller API::REST DBIC::API::REST myapp
-
-=head1 DESCRIPTION
-
-  This creates REST controllers for all the classes in your Catalyst app. Your application should access your model at myapp::Model::DB. If your result classes are not at that location, this will probably still work, but not optimally.
+=back
 
 =head1 AUTHOR
 
@@ -140,7 +169,7 @@ package [% app %]::Controller::API::REST;
 use strict;
 use warnings;
 
-use parent 'Catalyst::Controller::DBIC::API::REST';
+use parent 'Catalyst::Controller';
 
 sub rest_base : Chained('/api/api_base') PathPart('rest') CaptureArgs(0) {
     my ($self, $c) = @_;

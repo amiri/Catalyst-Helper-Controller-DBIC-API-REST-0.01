@@ -8,7 +8,7 @@ requires 'DBIx::Class::Schema';
 requires 'Data::Dumper';
 
 
-tests 't/*.t';
+tests 't/rest/*.t';
 author_tests 'xt';
 
 build_requires 'Test::More';

@@ -20,7 +20,7 @@
 #     VERSION => q[0.01]
 #     dist => {  }
 #     realclean => { FILES=>q[MYMETA.yml] }
-#     test => { TESTS=>q[t/*.t] }
+#     test => { TESTS=>q[t/rest/*.t] }
 
 # --- MakeMaker post_initialize section:
 
@@ -182,9 +182,12 @@ PERL_ARCHIVE       =
 PERL_ARCHIVE_AFTER = 
 
 
-TO_INST_PM = lib/Catalyst/Helper/Controller/DBIC/API/REST.pm
+TO_INST_PM = lib/Catalyst/Helper/Controller/DBIC/API/.REST.pm.swp \
+	lib/Catalyst/Helper/Controller/DBIC/API/REST.pm
 
-PM_TO_BLIB = lib/Catalyst/Helper/Controller/DBIC/API/REST.pm \
+PM_TO_BLIB = lib/Catalyst/Helper/Controller/DBIC/API/.REST.pm.swp \
+	blib/lib/Catalyst/Helper/Controller/DBIC/API/.REST.pm.swp \
+	lib/Catalyst/Helper/Controller/DBIC/API/REST.pm \
 	blib/lib/Catalyst/Helper/Controller/DBIC/API/REST.pm
 
 
@@ -735,7 +738,7 @@ $(MAKE_APERL_FILE) : $(FIRST_MAKEFILE) pm_to_blib
 TEST_VERBOSE=0
 TEST_TYPE=test_$(LINKTYPE)
 TEST_FILE = test.pl
-TEST_FILES = t/*.t
+TEST_FILES = t/rest/*.t
 TESTDB_SW = -d
 
 testdb :: testdb_$(LINKTYPE)
@@ -783,6 +786,7 @@ ppd :
 
 pm_to_blib : $(TO_INST_PM)
 	$(NOECHO) $(ABSPERLRUN) -MExtUtils::Install -e 'pm_to_blib({@ARGV}, '\''$(INST_LIB)/auto'\'', '\''$(PM_FILTER)'\'')' -- \
+	  lib/Catalyst/Helper/Controller/DBIC/API/.REST.pm.swp blib/lib/Catalyst/Helper/Controller/DBIC/API/.REST.pm.swp \
 	  lib/Catalyst/Helper/Controller/DBIC/API/REST.pm blib/lib/Catalyst/Helper/Controller/DBIC/API/REST.pm 
 	$(NOECHO) $(TOUCH) pm_to_blib
 
