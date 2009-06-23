@@ -2,24 +2,49 @@ package RestTest::Controller::API::REST::Producer;
 
 use strict;
 use warnings;
-use base qw/Catalyst::Controller::DBIC::API::REST/;
+use base qw/RestTest::ControllerBase::REST/;
 use JSON::Syck;
 
-__PACKAGE__->config
-    ( action => { setup => { PathPart => 'producer', Chained => '/api/rest/rest_base' } },
-      class => 'RestTestDB::Producer',
-      create_requires => ['name'],
-      update_allows => ['name'],
-      list_returns => ['name']
-      );
+__PACKAGE__->config(
+    action                  =>  { setup => { PathPart => 'producer', Chained => '/api/rest/rest_base' } },
+                                # define parent chain action and partpath
+    class                   =>  'DB::Producer', # DBIC result class
+    create_requires         =>  [qw/name/], # columns required to create
+    create_allows           =>  [qw//], # additional non-required columns that create allows
+    update_allows           =>  [qw/name/], # columns that update allows
+    list_returns            =>  [qw/producerid name/], # columns that list returns
+    list_prefetch           =>  [qw//], # relationships that are prefetched
+                                                            # when no prefetch param is passed
+    list_prefetch_allows    =>  [ # every possible prefetch param allowed
+        
+    ],
+    list_ordered_by         => [qw/producerid/], # order of generated list
+    list_search_exposes     => [qw/producerid name/], # columns that can be searched on via list
+);
 
-sub create :Private {
-  my ($self, $c) = @_;
-  $self->next::method($c);
+=head1 NAME
 
-  if ($c->stash->{created_object}) {
-    %{$c->stash->{response}->{new_producer}} = $c->stash->{created_object}->get_columns;
-  }
-}
+ - REST Controller for RestTest
+
+=head1 DESCRIPTION
+
+REST Methods to access the DBIC Result Class producer
+
+=head1 AUTHOR
+
+amiri,,,
+
+=head1 SEE ALSO
+
+L<Catalyst::Controller::DBIC::API>
+L<Catalyst::Controller::DBIC::API::REST>
+L<Catalyst::Controller::DBIC::API::RPC>
+
+=head1 LICENSE
+
+
+
+=cut
 
 1;
+

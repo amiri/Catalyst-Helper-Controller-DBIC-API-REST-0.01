@@ -12,7 +12,7 @@ __PACKAGE__->add_columns(
   'name' => {
     data_type => 'varchar',
     size      => 100,
-    is_nullable => 1,
+    is_nullable => 0,
   },
 );
 __PACKAGE__->set_primary_key('artistid');

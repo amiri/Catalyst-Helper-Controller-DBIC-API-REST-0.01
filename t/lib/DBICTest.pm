@@ -2,12 +2,8 @@ package # hide from PAUSE
     DBICTest;
 
 use strict;
-#use warnings;
+use warnings;
 use RestTest::Schema;
-use FindBin;
-use Catalyst::Helper::Controller::DBIC::API::REST qw/mk_compclass/;
-eval "use Catalyst::Helper;";
-use Data::Dumper;
 
 =head1 NAME
 
@@ -77,11 +73,6 @@ sub init_schema {
         __PACKAGE__->deploy_schema( $schema );
         __PACKAGE__->populate_schema( $schema ) if( !$args{no_populate} );
     }
-
-    my $helper = Catalyst::Helper->new( { '.newfiles' => 1, mech => 0 } );
-    print Dumper $helper;
-    Catalyst::Helper::Controller::DBIC::API::REST->mk_compclass($helper,'RestTest');
-
     return $schema;
 }
 

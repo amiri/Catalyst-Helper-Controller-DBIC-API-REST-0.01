@@ -1,14 +1,15 @@
 use inc::Module::Install;
+#use lib 't/lib';
+
 name 'Catalyst-Helper-Controller-DBIC-API-REST';
 all_from 'lib/Catalyst/Helper/Controller/DBIC/API/REST.pm';
 
-requires 'Catalyst::Controller::DBIC::API';
+
+requires 'Catalyst::Controller::DBIC::API' => '1.003000';
 requires 'Catalyst::Controller::DBIC::API::REST';
-requires 'DBIx::Class::Schema';
-requires 'Data::Dumper';
 
 
-tests 't/rest/*.t';
+tests "t/*.test";
 author_tests 'xt';
 
 build_requires 'Test::More';
