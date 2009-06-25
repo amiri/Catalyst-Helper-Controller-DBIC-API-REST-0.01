@@ -9,8 +9,8 @@ requires 'Catalyst::Controller::DBIC::API' => '1.003000';
 requires 'Catalyst::Controller::DBIC::API::REST';
 
 
-tests "t/*.test";
-author_tests 'xt';
+tests "t/*.pl";
+#author_tests 'xt';
 
 build_requires 'Test::More';
 use_test_base;

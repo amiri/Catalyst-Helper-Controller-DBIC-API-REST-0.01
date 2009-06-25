@@ -1,4 +1,4 @@
-package RestTest::Controller::API::REST::Artist;
+package RestTest::Controller::API::REST::Tag;
 
 use strict;
 use warnings;
@@ -6,13 +6,13 @@ use base qw/RestTest::ControllerBase::REST/;
 use JSON::Syck;
 
 __PACKAGE__->config(
-    action                  =>  { setup => { PathPart => 'artist', Chained => '/api/rest/rest_base' } },
+    action                  =>  { setup => { PathPart => 'tags', Chained => '/api/rest/rest_base' } },
                                 # define parent chain action and partpath
-    class                   =>  'DB::Artist', # DBIC result class
-    create_requires         =>  [qw/name/], # columns required to create
+    class                   =>  'DB::Tag', # DBIC result class
+    create_requires         =>  [qw/cd tag/], # columns required to create
     create_allows           =>  [qw//], # additional non-required columns that create allows
-    update_allows           =>  [qw/name/], # columns that update allows
-    list_returns            =>  [qw/artistid name/], # columns that list returns
+    update_allows           =>  [qw/cd tag/], # columns that update allows
+    list_returns            =>  [qw/tagid cd tag/], # columns that list returns
 
 
     list_prefetch_allows    =>  [ # every possible prefetch param allowed
@@ -20,11 +20,10 @@ __PACKAGE__->config(
 		
     ],
 
-    list_ordered_by         => [qw/artistid/], # order of generated list
+    list_ordered_by         => [qw/tagid/], # order of generated list
     list_search_exposes     => [
-        qw/artistid name/,
-        { 'cds' => [qw/cdid artist title year/] },
-		
+        qw/tagid cd tag/,
+        
     ], # columns that can be searched on via list
 );
 
@@ -34,7 +33,7 @@ __PACKAGE__->config(
 
 =head1 DESCRIPTION
 
-REST Methods to access the DBIC Result Class artist
+REST Methods to access the DBIC Result Class tags
 
 =head1 AUTHOR
 

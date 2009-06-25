@@ -1,0 +1,9 @@
+.DS_Store
+*.sw?
+lib/perl5
+lib/RestTest
+man
+.modulebuildrc
+blib
+inc
+bin

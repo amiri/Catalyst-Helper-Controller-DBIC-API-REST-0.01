@@ -1,4 +1,4 @@
-package RestTest::Controller::API::REST::CD;
+package RestTest::Controller::API::REST::CD_to_Producer;
 
 use strict;
 use warnings;
@@ -6,13 +6,13 @@ use base qw/RestTest::ControllerBase::REST/;
 use JSON::Syck;
 
 __PACKAGE__->config(
-    action                  =>  { setup => { PathPart => 'cd', Chained => '/api/rest/rest_base' } },
+    action                  =>  { setup => { PathPart => 'cd_to_producer', Chained => '/api/rest/rest_base' } },
                                 # define parent chain action and partpath
-    class                   =>  'DB::CD', # DBIC result class
-    create_requires         =>  [qw/artist title year/], # columns required to create
+    class                   =>  'DB::CD_to_Producer', # DBIC result class
+    create_requires         =>  [qw/cd producer/], # columns required to create
     create_allows           =>  [qw//], # additional non-required columns that create allows
-    update_allows           =>  [qw/artist title year/], # columns that update allows
-    list_returns            =>  [qw/cdid artist title year/], # columns that list returns
+    update_allows           =>  [qw/cd producer/], # columns that update allows
+    list_returns            =>  [qw/cd producer/], # columns that list returns
 
 
     list_prefetch_allows    =>  [ # every possible prefetch param allowed
@@ -22,13 +22,10 @@ __PACKAGE__->config(
 		
     ],
 
-    list_ordered_by         => [qw/cdid/], # order of generated list
+    list_ordered_by         => [qw/cd producer/], # order of generated list
     list_search_exposes     => [
-        qw/cdid artist title year/,
-        { 'cd_to_producer' => [qw/cd producer/] },
-		{ 'tags' => [qw/tagid cd tag/] },
-		{ 'tracks' => [qw/trackid cd position title last_updated_on/] },
-		
+        qw/cd producer/,
+        
     ], # columns that can be searched on via list
 );
 
@@ -38,7 +35,7 @@ __PACKAGE__->config(
 
 =head1 DESCRIPTION
 
-REST Methods to access the DBIC Result Class cd
+REST Methods to access the DBIC Result Class cd_to_producer
 
 =head1 AUTHOR
 

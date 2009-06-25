@@ -18,9 +18,9 @@
 #     PL_FILES => {  }
 #     PREREQ_PM => { Catalyst::Controller::DBIC::API::REST=>q[0], Catalyst::Controller::DBIC::API=>q[1.003000], Test::More=>q[0], ExtUtils::MakeMaker=>q[6.42] }
 #     VERSION => q[0.01]
-#     dist => {  }
+#     dist => { PREOP=>q[$(PERL) -I. "-MModule::Install::Admin" -e "dist_preop(q($(DISTVNAME)))"] }
 #     realclean => { FILES=>q[MYMETA.yml] }
-#     test => { TESTS=>q[t/*.test] }
+#     test => { TESTS=>q[t/*.pl] }
 
 # --- MakeMaker post_initialize section:
 
@@ -160,8 +160,7 @@ C_FILES  =
 O_FILES  = 
 H_FILES  = 
 MAN1PODS = 
-MAN3PODS = REST2.pm \
-	lib/Catalyst/Helper/Controller/DBIC/API/REST.pm \
+MAN3PODS = lib/Catalyst/Helper/Controller/DBIC/API/REST.pm \
 	lib/perl5/CGI/Expand.pm \
 	lib/perl5/Carp/Assert.pm \
 	lib/perl5/Carp/Assert/More.pm \
@@ -191,9 +190,16 @@ MAN3PODS = REST2.pm \
 	lib/perl5/Data/Serializer/XML/Simple.pm \
 	lib/perl5/Data/Serializer/YAML.pm \
 	lib/perl5/Data/Serializer/YAML/Syck.pm \
+	lib/perl5/Pod/Spell.pm \
+	lib/perl5/Pod/Wordlist.pod \
+	lib/perl5/String/Format.pm \
+	lib/perl5/Test/Deep.pod \
+	lib/perl5/Test/Deep/NoTest.pm \
 	lib/perl5/Test/LongString.pm \
+	lib/perl5/Test/Spelling.pm \
 	lib/perl5/Test/WWW/Mechanize.pm \
 	lib/perl5/Test/WWW/Mechanize/Catalyst.pm \
+	lib/perl5/UNIVERSAL/isa.pm \
 	lib/perl5/URI/Find.pm \
 	lib/perl5/URI/Find/Schemeless.pm \
 	lib/perl5/i486-linux-gnu-thread-multi/perllocal.pod
@@ -218,8 +224,7 @@ PERL_ARCHIVE       =
 PERL_ARCHIVE_AFTER = 
 
 
-TO_INST_PM = REST2.pm \
-	lib/Catalyst/Helper/Controller/DBIC/API/REST.pm \
+TO_INST_PM = lib/Catalyst/Helper/Controller/DBIC/API/REST.pm \
 	lib/perl5/CGI/Expand.pm \
 	lib/perl5/Carp/Assert.pm \
 	lib/perl5/Carp/Assert/More.pm \
@@ -260,9 +265,56 @@ TO_INST_PM = REST2.pm \
 	lib/perl5/Data/Serializer/XML/Simple.pm \
 	lib/perl5/Data/Serializer/YAML.pm \
 	lib/perl5/Data/Serializer/YAML/Syck.pm \
+	lib/perl5/Pod/Spell.pm \
+	lib/perl5/Pod/Wordlist.pm \
+	lib/perl5/Pod/Wordlist.pod \
+	lib/perl5/String/Format.pm \
+	lib/perl5/Test/Deep.pm \
+	lib/perl5/Test/Deep.pod \
+	lib/perl5/Test/Deep/All.pm \
+	lib/perl5/Test/Deep/Any.pm \
+	lib/perl5/Test/Deep/Array.pm \
+	lib/perl5/Test/Deep/ArrayEach.pm \
+	lib/perl5/Test/Deep/ArrayElementsOnly.pm \
+	lib/perl5/Test/Deep/ArrayLength.pm \
+	lib/perl5/Test/Deep/ArrayLengthOnly.pm \
+	lib/perl5/Test/Deep/Blessed.pm \
+	lib/perl5/Test/Deep/Boolean.pm \
+	lib/perl5/Test/Deep/Cache.pm \
+	lib/perl5/Test/Deep/Cache/Simple.pm \
+	lib/perl5/Test/Deep/Class.pm \
+	lib/perl5/Test/Deep/Cmp.pm \
+	lib/perl5/Test/Deep/Code.pm \
+	lib/perl5/Test/Deep/Hash.pm \
+	lib/perl5/Test/Deep/HashEach.pm \
+	lib/perl5/Test/Deep/HashElements.pm \
+	lib/perl5/Test/Deep/HashKeys.pm \
+	lib/perl5/Test/Deep/HashKeysOnly.pm \
+	lib/perl5/Test/Deep/Ignore.pm \
+	lib/perl5/Test/Deep/Isa.pm \
+	lib/perl5/Test/Deep/ListMethods.pm \
+	lib/perl5/Test/Deep/MM.pm \
+	lib/perl5/Test/Deep/Methods.pm \
+	lib/perl5/Test/Deep/NoTest.pm \
+	lib/perl5/Test/Deep/Number.pm \
+	lib/perl5/Test/Deep/Ref.pm \
+	lib/perl5/Test/Deep/RefType.pm \
+	lib/perl5/Test/Deep/Regexp.pm \
+	lib/perl5/Test/Deep/RegexpMatches.pm \
+	lib/perl5/Test/Deep/RegexpOnly.pm \
+	lib/perl5/Test/Deep/RegexpRef.pm \
+	lib/perl5/Test/Deep/RegexpRefOnly.pm \
+	lib/perl5/Test/Deep/ScalarRef.pm \
+	lib/perl5/Test/Deep/ScalarRefOnly.pm \
+	lib/perl5/Test/Deep/Set.pm \
+	lib/perl5/Test/Deep/Shallow.pm \
+	lib/perl5/Test/Deep/Stack.pm \
+	lib/perl5/Test/Deep/String.pm \
 	lib/perl5/Test/LongString.pm \
+	lib/perl5/Test/Spelling.pm \
 	lib/perl5/Test/WWW/Mechanize.pm \
 	lib/perl5/Test/WWW/Mechanize/Catalyst.pm \
+	lib/perl5/UNIVERSAL/isa.pm \
 	lib/perl5/URI/Find.pm \
 	lib/perl5/URI/Find/Schemeless.pm \
 	lib/perl5/i486-linux-gnu-thread-multi/auto/CGI/Expand/.packlist \
@@ -272,42 +324,167 @@ TO_INST_PM = REST2.pm \
 	lib/perl5/i486-linux-gnu-thread-multi/auto/Catalyst/Controller/DBIC/API/.packlist \
 	lib/perl5/i486-linux-gnu-thread-multi/auto/Catalyst/Plugin/Session/State/Cookie/.packlist \
 	lib/perl5/i486-linux-gnu-thread-multi/auto/Data/Serializer/.packlist \
+	lib/perl5/i486-linux-gnu-thread-multi/auto/Pod/Spell/.packlist \
+	lib/perl5/i486-linux-gnu-thread-multi/auto/String/Format/.packlist \
+	lib/perl5/i486-linux-gnu-thread-multi/auto/Test/Deep/.packlist \
 	lib/perl5/i486-linux-gnu-thread-multi/auto/Test/LongString/.packlist \
+	lib/perl5/i486-linux-gnu-thread-multi/auto/Test/Spelling/.packlist \
 	lib/perl5/i486-linux-gnu-thread-multi/auto/Test/WWW/Mechanize/.packlist \
 	lib/perl5/i486-linux-gnu-thread-multi/auto/Test/WWW/Mechanize/Catalyst/.packlist \
+	lib/perl5/i486-linux-gnu-thread-multi/auto/UNIVERSAL/isa/.packlist \
 	lib/perl5/i486-linux-gnu-thread-multi/auto/URI/Find/.packlist \
 	lib/perl5/i486-linux-gnu-thread-multi/perllocal.pod
 
-PM_TO_BLIB = lib/perl5/i486-linux-gnu-thread-multi/auto/Data/Serializer/.packlist \
-	blib/lib/perl5/i486-linux-gnu-thread-multi/auto/Data/Serializer/.packlist \
-	REST2.pm \
-	$(INST_LIB)/Catalyst/Helper/Controller/DBIC/API/REST2.pm \
-	lib/perl5/Data/Serializer.pm \
+PM_TO_BLIB = lib/perl5/Data/Serializer.pm \
 	blib/lib/perl5/Data/Serializer.pm \
-	lib/perl5/Catalyst/Action/REST.pm \
-	blib/lib/perl5/Catalyst/Action/REST.pm \
+	lib/perl5/Test/Deep/Array.pm \
+	blib/lib/perl5/Test/Deep/Array.pm \
+	lib/perl5/Test/Deep/Number.pm \
+	blib/lib/perl5/Test/Deep/Number.pm \
+	lib/perl5/Pod/Spell.pm \
+	blib/lib/perl5/Pod/Spell.pm \
+	lib/perl5/Test/Deep/Shallow.pm \
+	blib/lib/perl5/Test/Deep/Shallow.pm \
 	lib/Catalyst/Helper/Controller/DBIC/API/REST.pm \
 	blib/lib/Catalyst/Helper/Controller/DBIC/API/REST.pm \
-	lib/perl5/Catalyst/Action/Serialize/Data/Serializer.pm \
-	blib/lib/perl5/Catalyst/Action/Serialize/Data/Serializer.pm \
 	lib/perl5/Data/Serializer/Data/Taxi.pm \
 	blib/lib/perl5/Data/Serializer/Data/Taxi.pm \
 	lib/perl5/Catalyst/Action/Serialize/XML/Simple.pm \
 	blib/lib/perl5/Catalyst/Action/Serialize/XML/Simple.pm \
 	lib/perl5/Catalyst/Action/Deserialize/YAML.pm \
 	blib/lib/perl5/Catalyst/Action/Deserialize/YAML.pm \
-	lib/perl5/Catalyst/Action/Serialize/YAML.pm \
-	blib/lib/perl5/Catalyst/Action/Serialize/YAML.pm \
-	lib/perl5/Catalyst/Action/Deserialize/XML/Simple.pm \
-	blib/lib/perl5/Catalyst/Action/Deserialize/XML/Simple.pm \
+	lib/perl5/Test/Deep/Stack.pm \
+	blib/lib/perl5/Test/Deep/Stack.pm \
 	lib/perl5/Data/Serializer/Data/Dumper.pm \
 	blib/lib/perl5/Data/Serializer/Data/Dumper.pm \
 	lib/perl5/Catalyst/Controller/DBIC/API/REST.pm \
 	blib/lib/perl5/Catalyst/Controller/DBIC/API/REST.pm \
-	lib/perl5/Catalyst/Action/Deserialize/View.pm \
-	blib/lib/perl5/Catalyst/Action/Deserialize/View.pm \
+	lib/perl5/i486-linux-gnu-thread-multi/auto/Test/Spelling/.packlist \
+	blib/lib/perl5/i486-linux-gnu-thread-multi/auto/Test/Spelling/.packlist \
+	lib/perl5/Test/Deep/ArrayElementsOnly.pm \
+	blib/lib/perl5/Test/Deep/ArrayElementsOnly.pm \
+	lib/perl5/Test/Deep/Blessed.pm \
+	blib/lib/perl5/Test/Deep/Blessed.pm \
+	lib/perl5/Test/Deep/Set.pm \
+	blib/lib/perl5/Test/Deep/Set.pm \
 	lib/perl5/i486-linux-gnu-thread-multi/auto/Test/LongString/.packlist \
 	blib/lib/perl5/i486-linux-gnu-thread-multi/auto/Test/LongString/.packlist \
+	lib/perl5/Test/Deep/HashElements.pm \
+	blib/lib/perl5/Test/Deep/HashElements.pm \
+	lib/perl5/Test/Deep.pod \
+	blib/lib/perl5/Test/Deep.pod \
+	lib/perl5/Test/Deep/Ignore.pm \
+	blib/lib/perl5/Test/Deep/Ignore.pm \
+	lib/perl5/Test/Deep/Regexp.pm \
+	blib/lib/perl5/Test/Deep/Regexp.pm \
+	lib/perl5/i486-linux-gnu-thread-multi/auto/Catalyst/Controller/DBIC/API/.packlist \
+	blib/lib/perl5/i486-linux-gnu-thread-multi/auto/Catalyst/Controller/DBIC/API/.packlist \
+	lib/perl5/Data/Serializer/JSON.pm \
+	blib/lib/perl5/Data/Serializer/JSON.pm \
+	lib/perl5/Test/Deep/Methods.pm \
+	blib/lib/perl5/Test/Deep/Methods.pm \
+	lib/perl5/Data/Serializer/Storable.pm \
+	blib/lib/perl5/Data/Serializer/Storable.pm \
+	lib/perl5/Data/Serializer/FreezeThaw.pm \
+	blib/lib/perl5/Data/Serializer/FreezeThaw.pm \
+	lib/perl5/Test/Deep/Cache.pm \
+	blib/lib/perl5/Test/Deep/Cache.pm \
+	lib/perl5/Data/Serializer/Data/Denter.pm \
+	blib/lib/perl5/Data/Serializer/Data/Denter.pm \
+	lib/perl5/Data/Serializer/JSON/Syck.pm \
+	blib/lib/perl5/Data/Serializer/JSON/Syck.pm \
+	lib/perl5/Catalyst/Controller/REST.pm \
+	blib/lib/perl5/Catalyst/Controller/REST.pm \
+	lib/perl5/Catalyst/Action/Deserialize/JSON.pm \
+	blib/lib/perl5/Catalyst/Action/Deserialize/JSON.pm \
+	lib/perl5/i486-linux-gnu-thread-multi/auto/Catalyst/Action/REST/.packlist \
+	blib/lib/perl5/i486-linux-gnu-thread-multi/auto/Catalyst/Action/REST/.packlist \
+	lib/perl5/Test/Deep/HashKeysOnly.pm \
+	blib/lib/perl5/Test/Deep/HashKeysOnly.pm \
+	lib/perl5/Test/WWW/Mechanize/Catalyst.pm \
+	blib/lib/perl5/Test/WWW/Mechanize/Catalyst.pm \
+	lib/perl5/Test/Deep/MM.pm \
+	blib/lib/perl5/Test/Deep/MM.pm \
+	lib/perl5/Test/Spelling.pm \
+	blib/lib/perl5/Test/Spelling.pm \
+	lib/perl5/i486-linux-gnu-thread-multi/auto/Test/Deep/.packlist \
+	blib/lib/perl5/i486-linux-gnu-thread-multi/auto/Test/Deep/.packlist \
+	lib/perl5/i486-linux-gnu-thread-multi/auto/Test/WWW/Mechanize/Catalyst/.packlist \
+	blib/lib/perl5/i486-linux-gnu-thread-multi/auto/Test/WWW/Mechanize/Catalyst/.packlist \
+	lib/perl5/i486-linux-gnu-thread-multi/auto/Catalyst/Plugin/Session/State/Cookie/.packlist \
+	blib/lib/perl5/i486-linux-gnu-thread-multi/auto/Catalyst/Plugin/Session/State/Cookie/.packlist \
+	lib/perl5/Test/Deep/Cache/Simple.pm \
+	blib/lib/perl5/Test/Deep/Cache/Simple.pm \
+	lib/perl5/Test/Deep/Boolean.pm \
+	blib/lib/perl5/Test/Deep/Boolean.pm \
+	lib/perl5/Test/Deep/RegexpRef.pm \
+	blib/lib/perl5/Test/Deep/RegexpRef.pm \
+	lib/perl5/Catalyst/Action/Deserialize.pm \
+	blib/lib/perl5/Catalyst/Action/Deserialize.pm \
+	lib/perl5/Pod/Wordlist.pod \
+	blib/lib/perl5/Pod/Wordlist.pod \
+	lib/perl5/Data/Serializer/XML/Dumper.pm \
+	blib/lib/perl5/Data/Serializer/XML/Dumper.pm \
+	lib/perl5/Test/Deep/RegexpRefOnly.pm \
+	blib/lib/perl5/Test/Deep/RegexpRefOnly.pm \
+	lib/perl5/Test/Deep/Ref.pm \
+	blib/lib/perl5/Test/Deep/Ref.pm \
+	lib/perl5/Test/Deep/HashEach.pm \
+	blib/lib/perl5/Test/Deep/HashEach.pm \
+	lib/perl5/i486-linux-gnu-thread-multi/auto/Carp/Assert/.packlist \
+	blib/lib/perl5/i486-linux-gnu-thread-multi/auto/Carp/Assert/.packlist \
+	lib/perl5/URI/Find.pm \
+	blib/lib/perl5/URI/Find.pm \
+	lib/perl5/Test/Deep/HashKeys.pm \
+	blib/lib/perl5/Test/Deep/HashKeys.pm \
+	lib/perl5/Test/Deep/RegexpOnly.pm \
+	blib/lib/perl5/Test/Deep/RegexpOnly.pm \
+	lib/perl5/Test/Deep/ArrayEach.pm \
+	blib/lib/perl5/Test/Deep/ArrayEach.pm \
+	lib/perl5/Test/Deep/ArrayLength.pm \
+	blib/lib/perl5/Test/Deep/ArrayLength.pm \
+	lib/perl5/i486-linux-gnu-thread-multi/perllocal.pod \
+	blib/lib/perl5/i486-linux-gnu-thread-multi/perllocal.pod \
+	lib/perl5/Data/Serializer/PHP/Serialization.pm \
+	blib/lib/perl5/Data/Serializer/PHP/Serialization.pm \
+	lib/perl5/Test/Deep/Cmp.pm \
+	blib/lib/perl5/Test/Deep/Cmp.pm \
+	lib/perl5/Test/Deep/NoTest.pm \
+	blib/lib/perl5/Test/Deep/NoTest.pm \
+	lib/perl5/Data/Serializer/Config/General.pm \
+	blib/lib/perl5/Data/Serializer/Config/General.pm \
+	lib/perl5/UNIVERSAL/isa.pm \
+	blib/lib/perl5/UNIVERSAL/isa.pm \
+	lib/perl5/i486-linux-gnu-thread-multi/auto/Data/Serializer/.packlist \
+	blib/lib/perl5/i486-linux-gnu-thread-multi/auto/Data/Serializer/.packlist \
+	lib/perl5/i486-linux-gnu-thread-multi/auto/String/Format/.packlist \
+	blib/lib/perl5/i486-linux-gnu-thread-multi/auto/String/Format/.packlist \
+	lib/perl5/Test/Deep/Hash.pm \
+	blib/lib/perl5/Test/Deep/Hash.pm \
+	lib/perl5/String/Format.pm \
+	blib/lib/perl5/String/Format.pm \
+	lib/perl5/Catalyst/Action/REST.pm \
+	blib/lib/perl5/Catalyst/Action/REST.pm \
+	lib/perl5/Catalyst/Action/Serialize/Data/Serializer.pm \
+	blib/lib/perl5/Catalyst/Action/Serialize/Data/Serializer.pm \
+	lib/perl5/Catalyst/Action/Serialize/YAML.pm \
+	blib/lib/perl5/Catalyst/Action/Serialize/YAML.pm \
+	lib/perl5/Test/Deep/Isa.pm \
+	blib/lib/perl5/Test/Deep/Isa.pm \
+	lib/perl5/Catalyst/Action/Deserialize/XML/Simple.pm \
+	blib/lib/perl5/Catalyst/Action/Deserialize/XML/Simple.pm \
+	lib/perl5/Test/Deep/ScalarRefOnly.pm \
+	blib/lib/perl5/Test/Deep/ScalarRefOnly.pm \
+	lib/perl5/i486-linux-gnu-thread-multi/auto/Pod/Spell/.packlist \
+	blib/lib/perl5/i486-linux-gnu-thread-multi/auto/Pod/Spell/.packlist \
+	lib/perl5/Test/Deep/ScalarRef.pm \
+	blib/lib/perl5/Test/Deep/ScalarRef.pm \
+	lib/perl5/Test/Deep/Code.pm \
+	blib/lib/perl5/Test/Deep/Code.pm \
+	lib/perl5/Catalyst/Action/Deserialize/View.pm \
+	blib/lib/perl5/Catalyst/Action/Deserialize/View.pm \
+	lib/perl5/i486-linux-gnu-thread-multi/auto/UNIVERSAL/isa/.packlist \
+	blib/lib/perl5/i486-linux-gnu-thread-multi/auto/UNIVERSAL/isa/.packlist \
 	lib/perl5/Carp/Assert.pm \
 	blib/lib/perl5/Carp/Assert.pm \
 	lib/perl5/i486-linux-gnu-thread-multi/auto/Carp/Assert/More/.packlist \
@@ -318,82 +495,64 @@ PM_TO_BLIB = lib/perl5/i486-linux-gnu-thread-multi/auto/Data/Serializer/.packlis
 	blib/lib/perl5/Catalyst/Request/REST.pm \
 	lib/perl5/i486-linux-gnu-thread-multi/auto/CGI/Expand/.packlist \
 	blib/lib/perl5/i486-linux-gnu-thread-multi/auto/CGI/Expand/.packlist \
-	lib/perl5/i486-linux-gnu-thread-multi/auto/Catalyst/Controller/DBIC/API/.packlist \
-	blib/lib/perl5/i486-linux-gnu-thread-multi/auto/Catalyst/Controller/DBIC/API/.packlist \
-	lib/perl5/Data/Serializer/JSON.pm \
-	blib/lib/perl5/Data/Serializer/JSON.pm \
+	lib/perl5/Test/Deep/RefType.pm \
+	blib/lib/perl5/Test/Deep/RefType.pm \
 	lib/perl5/i486-linux-gnu-thread-multi/auto/Test/WWW/Mechanize/.packlist \
 	blib/lib/perl5/i486-linux-gnu-thread-multi/auto/Test/WWW/Mechanize/.packlist \
-	lib/perl5/Data/Serializer/FreezeThaw.pm \
-	blib/lib/perl5/Data/Serializer/FreezeThaw.pm \
-	lib/perl5/Data/Serializer/Storable.pm \
-	blib/lib/perl5/Data/Serializer/Storable.pm \
 	lib/perl5/Catalyst/Action/Serialize.pm \
 	blib/lib/perl5/Catalyst/Action/Serialize.pm \
-	lib/perl5/Data/Serializer/Data/Denter.pm \
-	blib/lib/perl5/Data/Serializer/Data/Denter.pm \
-	lib/perl5/Data/Serializer/JSON/Syck.pm \
-	blib/lib/perl5/Data/Serializer/JSON/Syck.pm \
-	lib/perl5/Catalyst/Controller/REST.pm \
-	blib/lib/perl5/Catalyst/Controller/REST.pm \
 	lib/perl5/i486-linux-gnu-thread-multi/auto/URI/Find/.packlist \
 	blib/lib/perl5/i486-linux-gnu-thread-multi/auto/URI/Find/.packlist \
-	lib/perl5/Catalyst/Action/Deserialize/JSON.pm \
-	blib/lib/perl5/Catalyst/Action/Deserialize/JSON.pm \
 	lib/perl5/Catalyst/Controller/DBIC/API/RPC.pm \
 	blib/lib/perl5/Catalyst/Controller/DBIC/API/RPC.pm \
-	lib/perl5/i486-linux-gnu-thread-multi/auto/Catalyst/Action/REST/.packlist \
-	blib/lib/perl5/i486-linux-gnu-thread-multi/auto/Catalyst/Action/REST/.packlist \
 	lib/perl5/Data/Serializer/XML/Simple.pm \
 	blib/lib/perl5/Data/Serializer/XML/Simple.pm \
+	lib/perl5/Test/Deep.pm \
+	blib/lib/perl5/Test/Deep.pm \
 	lib/perl5/Carp/Assert/More.pm \
 	blib/lib/perl5/Carp/Assert/More.pm \
 	lib/perl5/Catalyst/Controller/DBIC/API.pm \
 	blib/lib/perl5/Catalyst/Controller/DBIC/API.pm \
-	lib/perl5/Test/WWW/Mechanize/Catalyst.pm \
-	blib/lib/perl5/Test/WWW/Mechanize/Catalyst.pm \
 	lib/perl5/Catalyst/Controller/DBIC/API/Base.pm \
 	blib/lib/perl5/Catalyst/Controller/DBIC/API/Base.pm \
 	lib/perl5/Catalyst/Action/Serialize/JSON.pm \
 	blib/lib/perl5/Catalyst/Action/Serialize/JSON.pm \
 	lib/perl5/CGI/Expand.pm \
 	blib/lib/perl5/CGI/Expand.pm \
-	lib/perl5/i486-linux-gnu-thread-multi/auto/Test/WWW/Mechanize/Catalyst/.packlist \
-	blib/lib/perl5/i486-linux-gnu-thread-multi/auto/Test/WWW/Mechanize/Catalyst/.packlist \
 	lib/perl5/Catalyst/Action/SerializeBase.pm \
 	blib/lib/perl5/Catalyst/Action/SerializeBase.pm \
-	lib/perl5/i486-linux-gnu-thread-multi/auto/Catalyst/Plugin/Session/State/Cookie/.packlist \
-	blib/lib/perl5/i486-linux-gnu-thread-multi/auto/Catalyst/Plugin/Session/State/Cookie/.packlist \
 	lib/perl5/Test/WWW/Mechanize.pm \
 	blib/lib/perl5/Test/WWW/Mechanize.pm \
 	lib/perl5/Catalyst/Action/Serialize/YAML/HTML.pm \
 	blib/lib/perl5/Catalyst/Action/Serialize/YAML/HTML.pm \
-	lib/perl5/Catalyst/Action/Deserialize.pm \
-	blib/lib/perl5/Catalyst/Action/Deserialize.pm \
-	lib/perl5/Data/Serializer/XML/Dumper.pm \
-	blib/lib/perl5/Data/Serializer/XML/Dumper.pm \
-	lib/perl5/URI/Find.pm \
-	blib/lib/perl5/URI/Find.pm \
-	lib/perl5/i486-linux-gnu-thread-multi/auto/Carp/Assert/.packlist \
-	blib/lib/perl5/i486-linux-gnu-thread-multi/auto/Carp/Assert/.packlist \
+	lib/perl5/Pod/Wordlist.pm \
+	blib/lib/perl5/Pod/Wordlist.pm \
+	lib/perl5/Test/Deep/Any.pm \
+	blib/lib/perl5/Test/Deep/Any.pm \
+	lib/perl5/Test/Deep/String.pm \
+	blib/lib/perl5/Test/Deep/String.pm \
+	lib/perl5/Test/Deep/ListMethods.pm \
+	blib/lib/perl5/Test/Deep/ListMethods.pm \
+	lib/perl5/Test/Deep/ArrayLengthOnly.pm \
+	blib/lib/perl5/Test/Deep/ArrayLengthOnly.pm \
 	lib/perl5/Catalyst/Action/Serialize/View.pm \
 	blib/lib/perl5/Catalyst/Action/Serialize/View.pm \
-	lib/perl5/Data/Serializer/YAML.pm \
-	blib/lib/perl5/Data/Serializer/YAML.pm \
 	lib/perl5/Data/Serializer/Cookbook.pm \
 	blib/lib/perl5/Data/Serializer/Cookbook.pm \
-	lib/perl5/i486-linux-gnu-thread-multi/perllocal.pod \
-	blib/lib/perl5/i486-linux-gnu-thread-multi/perllocal.pod \
-	lib/perl5/Data/Serializer/PHP/Serialization.pm \
-	blib/lib/perl5/Data/Serializer/PHP/Serialization.pm \
+	lib/perl5/Data/Serializer/YAML.pm \
+	blib/lib/perl5/Data/Serializer/YAML.pm \
 	lib/perl5/Catalyst/Action/Deserialize/Data/Serializer.pm \
 	blib/lib/perl5/Catalyst/Action/Deserialize/Data/Serializer.pm \
+	lib/perl5/Test/Deep/All.pm \
+	blib/lib/perl5/Test/Deep/All.pm \
+	lib/perl5/Test/Deep/Class.pm \
+	blib/lib/perl5/Test/Deep/Class.pm \
 	lib/perl5/URI/Find/Schemeless.pm \
 	blib/lib/perl5/URI/Find/Schemeless.pm \
-	lib/perl5/Data/Serializer/Config/General.pm \
-	blib/lib/perl5/Data/Serializer/Config/General.pm \
 	lib/perl5/Catalyst/Plugin/Session/State/Cookie.pm \
 	blib/lib/perl5/Catalyst/Plugin/Session/State/Cookie.pm \
+	lib/perl5/Test/Deep/RegexpMatches.pm \
+	blib/lib/perl5/Test/Deep/RegexpMatches.pm \
 	lib/perl5/Test/LongString.pm \
 	blib/lib/perl5/Test/LongString.pm
 
@@ -454,7 +613,7 @@ ZIPFLAGS = -r
 COMPRESS = gzip --best
 SUFFIX = .gz
 SHAR = shar
-PREOP = $(NOECHO) $(NOOP)
+PREOP = $(PERL) -I. "-MModule::Install::Admin" -e "dist_preop(q($(DISTVNAME)))"
 POSTOP = $(NOECHO) $(NOOP)
 TO_UNIX = $(NOECHO) $(NOOP)
 CI = ci -u
@@ -616,19 +775,21 @@ POD2MAN = $(POD2MAN_EXE)
 
 
 manifypods : pure_all  \
-	REST2.pm \
 	lib/perl5/Data/Serializer.pm \
-	lib/perl5/Catalyst/Action/REST.pm \
+	lib/perl5/String/Format.pm \
+	lib/perl5/Pod/Spell.pm \
 	lib/Catalyst/Helper/Controller/DBIC/API/REST.pm \
+	lib/perl5/Catalyst/Action/REST.pm \
 	lib/perl5/Data/Serializer/Data/Taxi.pm \
 	lib/perl5/Data/Serializer/Data/Dumper.pm \
 	lib/perl5/Catalyst/Controller/DBIC/API/REST.pm \
 	lib/perl5/Carp/Assert.pm \
+	lib/perl5/Test/Deep.pod \
 	lib/perl5/Data/Serializer/YAML/Syck.pm \
 	lib/perl5/Catalyst/Request/REST.pm \
 	lib/perl5/Data/Serializer/JSON.pm \
-	lib/perl5/Data/Serializer/FreezeThaw.pm \
 	lib/perl5/Data/Serializer/Storable.pm \
+	lib/perl5/Data/Serializer/FreezeThaw.pm \
 	lib/perl5/Catalyst/Action/Serialize.pm \
 	lib/perl5/Data/Serializer/Data/Denter.pm \
 	lib/perl5/Data/Serializer/JSON/Syck.pm \
@@ -636,37 +797,43 @@ manifypods : pure_all  \
 	lib/perl5/Catalyst/Controller/DBIC/API/RPC.pm \
 	lib/perl5/Data/Serializer/XML/Simple.pm \
 	lib/perl5/Carp/Assert/More.pm \
-	lib/perl5/Catalyst/Controller/DBIC/API.pm \
 	lib/perl5/Test/WWW/Mechanize/Catalyst.pm \
+	lib/perl5/Catalyst/Controller/DBIC/API.pm \
 	lib/perl5/Catalyst/Controller/DBIC/API/Base.pm \
 	lib/perl5/CGI/Expand.pm \
+	lib/perl5/Test/Spelling.pm \
 	lib/perl5/Catalyst/Action/SerializeBase.pm \
 	lib/perl5/Test/WWW/Mechanize.pm \
 	lib/perl5/Catalyst/Action/Deserialize.pm \
+	lib/perl5/Pod/Wordlist.pod \
 	lib/perl5/Data/Serializer/XML/Dumper.pm \
 	lib/perl5/URI/Find.pm \
-	lib/perl5/Data/Serializer/YAML.pm \
-	lib/perl5/Data/Serializer/Cookbook.pm \
 	lib/perl5/i486-linux-gnu-thread-multi/perllocal.pod \
+	lib/perl5/Data/Serializer/Cookbook.pm \
+	lib/perl5/Data/Serializer/YAML.pm \
 	lib/perl5/Data/Serializer/PHP/Serialization.pm \
-	lib/perl5/URI/Find/Schemeless.pm \
+	lib/perl5/Test/Deep/NoTest.pm \
 	lib/perl5/Data/Serializer/Config/General.pm \
+	lib/perl5/URI/Find/Schemeless.pm \
+	lib/perl5/UNIVERSAL/isa.pm \
 	lib/perl5/Catalyst/Plugin/Session/State/Cookie.pm \
 	lib/perl5/Test/LongString.pm
 	$(NOECHO) $(POD2MAN) --section=3 --perm_rw=$(PERM_RW) \
-	  REST2.pm $(INST_MAN3DIR)/Catalyst::Helper::Controller::DBIC::API::REST2.$(MAN3EXT) \
 	  lib/perl5/Data/Serializer.pm $(INST_MAN3DIR)/perl5::Data::Serializer.$(MAN3EXT) \
-	  lib/perl5/Catalyst/Action/REST.pm $(INST_MAN3DIR)/perl5::Catalyst::Action::REST.$(MAN3EXT) \
+	  lib/perl5/String/Format.pm $(INST_MAN3DIR)/perl5::String::Format.$(MAN3EXT) \
+	  lib/perl5/Pod/Spell.pm $(INST_MAN3DIR)/perl5::Pod::Spell.$(MAN3EXT) \
 	  lib/Catalyst/Helper/Controller/DBIC/API/REST.pm $(INST_MAN3DIR)/Catalyst::Helper::Controller::DBIC::API::REST.$(MAN3EXT) \
+	  lib/perl5/Catalyst/Action/REST.pm $(INST_MAN3DIR)/perl5::Catalyst::Action::REST.$(MAN3EXT) \
 	  lib/perl5/Data/Serializer/Data/Taxi.pm $(INST_MAN3DIR)/perl5::Data::Serializer::Data::Taxi.$(MAN3EXT) \
 	  lib/perl5/Data/Serializer/Data/Dumper.pm $(INST_MAN3DIR)/perl5::Data::Serializer::Data::Dumper.$(MAN3EXT) \
 	  lib/perl5/Catalyst/Controller/DBIC/API/REST.pm $(INST_MAN3DIR)/perl5::Catalyst::Controller::DBIC::API::REST.$(MAN3EXT) \
 	  lib/perl5/Carp/Assert.pm $(INST_MAN3DIR)/perl5::Carp::Assert.$(MAN3EXT) \
+	  lib/perl5/Test/Deep.pod $(INST_MAN3DIR)/perl5::Test::Deep.$(MAN3EXT) \
 	  lib/perl5/Data/Serializer/YAML/Syck.pm $(INST_MAN3DIR)/perl5::Data::Serializer::YAML::Syck.$(MAN3EXT) \
 	  lib/perl5/Catalyst/Request/REST.pm $(INST_MAN3DIR)/perl5::Catalyst::Request::REST.$(MAN3EXT) \
 	  lib/perl5/Data/Serializer/JSON.pm $(INST_MAN3DIR)/perl5::Data::Serializer::JSON.$(MAN3EXT) \
-	  lib/perl5/Data/Serializer/FreezeThaw.pm $(INST_MAN3DIR)/perl5::Data::Serializer::FreezeThaw.$(MAN3EXT) \
 	  lib/perl5/Data/Serializer/Storable.pm $(INST_MAN3DIR)/perl5::Data::Serializer::Storable.$(MAN3EXT) \
+	  lib/perl5/Data/Serializer/FreezeThaw.pm $(INST_MAN3DIR)/perl5::Data::Serializer::FreezeThaw.$(MAN3EXT) \
 	  lib/perl5/Catalyst/Action/Serialize.pm $(INST_MAN3DIR)/perl5::Catalyst::Action::Serialize.$(MAN3EXT) \
 	  lib/perl5/Data/Serializer/Data/Denter.pm $(INST_MAN3DIR)/perl5::Data::Serializer::Data::Denter.$(MAN3EXT) \
 	  lib/perl5/Data/Serializer/JSON/Syck.pm $(INST_MAN3DIR)/perl5::Data::Serializer::JSON::Syck.$(MAN3EXT) \
@@ -674,22 +841,26 @@ manifypods : pure_all  \
 	  lib/perl5/Catalyst/Controller/DBIC/API/RPC.pm $(INST_MAN3DIR)/perl5::Catalyst::Controller::DBIC::API::RPC.$(MAN3EXT) \
 	  lib/perl5/Data/Serializer/XML/Simple.pm $(INST_MAN3DIR)/perl5::Data::Serializer::XML::Simple.$(MAN3EXT) \
 	  lib/perl5/Carp/Assert/More.pm $(INST_MAN3DIR)/perl5::Carp::Assert::More.$(MAN3EXT) \
-	  lib/perl5/Catalyst/Controller/DBIC/API.pm $(INST_MAN3DIR)/perl5::Catalyst::Controller::DBIC::API.$(MAN3EXT) \
 	  lib/perl5/Test/WWW/Mechanize/Catalyst.pm $(INST_MAN3DIR)/perl5::Test::WWW::Mechanize::Catalyst.$(MAN3EXT) \
+	  lib/perl5/Catalyst/Controller/DBIC/API.pm $(INST_MAN3DIR)/perl5::Catalyst::Controller::DBIC::API.$(MAN3EXT) \
 	  lib/perl5/Catalyst/Controller/DBIC/API/Base.pm $(INST_MAN3DIR)/perl5::Catalyst::Controller::DBIC::API::Base.$(MAN3EXT) \
 	  lib/perl5/CGI/Expand.pm $(INST_MAN3DIR)/perl5::CGI::Expand.$(MAN3EXT) \
-	  lib/perl5/Catalyst/Action/SerializeBase.pm $(INST_MAN3DIR)/perl5::Catalyst::Action::SerializeBase.$(MAN3EXT) \
-	  lib/perl5/Test/WWW/Mechanize.pm $(INST_MAN3DIR)/perl5::Test::WWW::Mechanize.$(MAN3EXT) \
-	  lib/perl5/Catalyst/Action/Deserialize.pm $(INST_MAN3DIR)/perl5::Catalyst::Action::Deserialize.$(MAN3EXT) 
+	  lib/perl5/Test/Spelling.pm $(INST_MAN3DIR)/perl5::Test::Spelling.$(MAN3EXT) \
+	  lib/perl5/Catalyst/Action/SerializeBase.pm $(INST_MAN3DIR)/perl5::Catalyst::Action::SerializeBase.$(MAN3EXT) 
 	$(NOECHO) $(POD2MAN) --section=3 --perm_rw=$(PERM_RW) \
+	  lib/perl5/Test/WWW/Mechanize.pm $(INST_MAN3DIR)/perl5::Test::WWW::Mechanize.$(MAN3EXT) \
+	  lib/perl5/Catalyst/Action/Deserialize.pm $(INST_MAN3DIR)/perl5::Catalyst::Action::Deserialize.$(MAN3EXT) \
+	  lib/perl5/Pod/Wordlist.pod $(INST_MAN3DIR)/perl5::Pod::Wordlist.$(MAN3EXT) \
 	  lib/perl5/Data/Serializer/XML/Dumper.pm $(INST_MAN3DIR)/perl5::Data::Serializer::XML::Dumper.$(MAN3EXT) \
 	  lib/perl5/URI/Find.pm $(INST_MAN3DIR)/perl5::URI::Find.$(MAN3EXT) \
-	  lib/perl5/Data/Serializer/YAML.pm $(INST_MAN3DIR)/perl5::Data::Serializer::YAML.$(MAN3EXT) \
-	  lib/perl5/Data/Serializer/Cookbook.pm $(INST_MAN3DIR)/perl5::Data::Serializer::Cookbook.$(MAN3EXT) \
 	  lib/perl5/i486-linux-gnu-thread-multi/perllocal.pod $(INST_MAN3DIR)/perl5::i486-linux-gnu-thread-multi::perllocal.$(MAN3EXT) \
+	  lib/perl5/Data/Serializer/Cookbook.pm $(INST_MAN3DIR)/perl5::Data::Serializer::Cookbook.$(MAN3EXT) \
+	  lib/perl5/Data/Serializer/YAML.pm $(INST_MAN3DIR)/perl5::Data::Serializer::YAML.$(MAN3EXT) \
 	  lib/perl5/Data/Serializer/PHP/Serialization.pm $(INST_MAN3DIR)/perl5::Data::Serializer::PHP::Serialization.$(MAN3EXT) \
-	  lib/perl5/URI/Find/Schemeless.pm $(INST_MAN3DIR)/perl5::URI::Find::Schemeless.$(MAN3EXT) \
+	  lib/perl5/Test/Deep/NoTest.pm $(INST_MAN3DIR)/perl5::Test::Deep::NoTest.$(MAN3EXT) \
 	  lib/perl5/Data/Serializer/Config/General.pm $(INST_MAN3DIR)/perl5::Data::Serializer::Config::General.$(MAN3EXT) \
+	  lib/perl5/URI/Find/Schemeless.pm $(INST_MAN3DIR)/perl5::URI::Find::Schemeless.$(MAN3EXT) \
+	  lib/perl5/UNIVERSAL/isa.pm $(INST_MAN3DIR)/perl5::UNIVERSAL::isa.$(MAN3EXT) \
 	  lib/perl5/Catalyst/Plugin/Session/State/Cookie.pm $(INST_MAN3DIR)/perl5::Catalyst::Plugin::Session::State::Cookie.$(MAN3EXT) \
 	  lib/perl5/Test/LongString.pm $(INST_MAN3DIR)/perl5::Test::LongString.$(MAN3EXT) 
 
@@ -1018,7 +1189,7 @@ $(MAKE_APERL_FILE) : $(FIRST_MAKEFILE) pm_to_blib
 TEST_VERBOSE=0
 TEST_TYPE=test_$(LINKTYPE)
 TEST_FILE = test.pl
-TEST_FILES = t/*.test
+TEST_FILES = t/*.pl
 TESTDB_SW = -d
 
 testdb :: testdb_$(LINKTYPE)
@@ -1064,66 +1235,118 @@ ppd :
 
 pm_to_blib : $(TO_INST_PM)
 	$(NOECHO) $(ABSPERLRUN) -MExtUtils::Install -e 'pm_to_blib({@ARGV}, '\''$(INST_LIB)/auto'\'', '\''$(PM_FILTER)'\'')' -- \
-	  lib/perl5/i486-linux-gnu-thread-multi/auto/Data/Serializer/.packlist blib/lib/perl5/i486-linux-gnu-thread-multi/auto/Data/Serializer/.packlist \
-	  REST2.pm $(INST_LIB)/Catalyst/Helper/Controller/DBIC/API/REST2.pm \
 	  lib/perl5/Data/Serializer.pm blib/lib/perl5/Data/Serializer.pm \
-	  lib/perl5/Catalyst/Action/REST.pm blib/lib/perl5/Catalyst/Action/REST.pm \
+	  lib/perl5/Test/Deep/Array.pm blib/lib/perl5/Test/Deep/Array.pm \
+	  lib/perl5/Test/Deep/Number.pm blib/lib/perl5/Test/Deep/Number.pm \
+	  lib/perl5/Pod/Spell.pm blib/lib/perl5/Pod/Spell.pm \
+	  lib/perl5/Test/Deep/Shallow.pm blib/lib/perl5/Test/Deep/Shallow.pm \
 	  lib/Catalyst/Helper/Controller/DBIC/API/REST.pm blib/lib/Catalyst/Helper/Controller/DBIC/API/REST.pm \
-	  lib/perl5/Catalyst/Action/Serialize/Data/Serializer.pm blib/lib/perl5/Catalyst/Action/Serialize/Data/Serializer.pm \
 	  lib/perl5/Data/Serializer/Data/Taxi.pm blib/lib/perl5/Data/Serializer/Data/Taxi.pm \
 	  lib/perl5/Catalyst/Action/Serialize/XML/Simple.pm blib/lib/perl5/Catalyst/Action/Serialize/XML/Simple.pm \
 	  lib/perl5/Catalyst/Action/Deserialize/YAML.pm blib/lib/perl5/Catalyst/Action/Deserialize/YAML.pm \
-	  lib/perl5/Catalyst/Action/Serialize/YAML.pm blib/lib/perl5/Catalyst/Action/Serialize/YAML.pm \
-	  lib/perl5/Catalyst/Action/Deserialize/XML/Simple.pm blib/lib/perl5/Catalyst/Action/Deserialize/XML/Simple.pm \
+	  lib/perl5/Test/Deep/Stack.pm blib/lib/perl5/Test/Deep/Stack.pm \
 	  lib/perl5/Data/Serializer/Data/Dumper.pm blib/lib/perl5/Data/Serializer/Data/Dumper.pm \
 	  lib/perl5/Catalyst/Controller/DBIC/API/REST.pm blib/lib/perl5/Catalyst/Controller/DBIC/API/REST.pm \
-	  lib/perl5/Catalyst/Action/Deserialize/View.pm blib/lib/perl5/Catalyst/Action/Deserialize/View.pm \
+	  lib/perl5/i486-linux-gnu-thread-multi/auto/Test/Spelling/.packlist blib/lib/perl5/i486-linux-gnu-thread-multi/auto/Test/Spelling/.packlist \
+	  lib/perl5/Test/Deep/ArrayElementsOnly.pm blib/lib/perl5/Test/Deep/ArrayElementsOnly.pm \
+	  lib/perl5/Test/Deep/Blessed.pm blib/lib/perl5/Test/Deep/Blessed.pm \
+	  lib/perl5/Test/Deep/Set.pm blib/lib/perl5/Test/Deep/Set.pm \
 	  lib/perl5/i486-linux-gnu-thread-multi/auto/Test/LongString/.packlist blib/lib/perl5/i486-linux-gnu-thread-multi/auto/Test/LongString/.packlist \
+	  lib/perl5/Test/Deep/HashElements.pm blib/lib/perl5/Test/Deep/HashElements.pm \
+	  lib/perl5/Test/Deep.pod blib/lib/perl5/Test/Deep.pod \
+	  lib/perl5/Test/Deep/Ignore.pm blib/lib/perl5/Test/Deep/Ignore.pm \
+	  lib/perl5/Test/Deep/Regexp.pm blib/lib/perl5/Test/Deep/Regexp.pm \
+	  lib/perl5/i486-linux-gnu-thread-multi/auto/Catalyst/Controller/DBIC/API/.packlist blib/lib/perl5/i486-linux-gnu-thread-multi/auto/Catalyst/Controller/DBIC/API/.packlist \
+	  lib/perl5/Data/Serializer/JSON.pm blib/lib/perl5/Data/Serializer/JSON.pm \
+	  lib/perl5/Test/Deep/Methods.pm blib/lib/perl5/Test/Deep/Methods.pm \
+	  lib/perl5/Data/Serializer/Storable.pm blib/lib/perl5/Data/Serializer/Storable.pm \
+	  lib/perl5/Data/Serializer/FreezeThaw.pm blib/lib/perl5/Data/Serializer/FreezeThaw.pm \
+	  lib/perl5/Test/Deep/Cache.pm blib/lib/perl5/Test/Deep/Cache.pm \
+	  lib/perl5/Data/Serializer/Data/Denter.pm blib/lib/perl5/Data/Serializer/Data/Denter.pm \
+	  lib/perl5/Data/Serializer/JSON/Syck.pm blib/lib/perl5/Data/Serializer/JSON/Syck.pm \
+	  lib/perl5/Catalyst/Controller/REST.pm blib/lib/perl5/Catalyst/Controller/REST.pm \
+	  lib/perl5/Catalyst/Action/Deserialize/JSON.pm blib/lib/perl5/Catalyst/Action/Deserialize/JSON.pm 
+	$(NOECHO) $(ABSPERLRUN) -MExtUtils::Install -e 'pm_to_blib({@ARGV}, '\''$(INST_LIB)/auto'\'', '\''$(PM_FILTER)'\'')' -- \
+	  lib/perl5/i486-linux-gnu-thread-multi/auto/Catalyst/Action/REST/.packlist blib/lib/perl5/i486-linux-gnu-thread-multi/auto/Catalyst/Action/REST/.packlist \
+	  lib/perl5/Test/Deep/HashKeysOnly.pm blib/lib/perl5/Test/Deep/HashKeysOnly.pm \
+	  lib/perl5/Test/WWW/Mechanize/Catalyst.pm blib/lib/perl5/Test/WWW/Mechanize/Catalyst.pm \
+	  lib/perl5/Test/Deep/MM.pm blib/lib/perl5/Test/Deep/MM.pm \
+	  lib/perl5/Test/Spelling.pm blib/lib/perl5/Test/Spelling.pm \
+	  lib/perl5/i486-linux-gnu-thread-multi/auto/Test/Deep/.packlist blib/lib/perl5/i486-linux-gnu-thread-multi/auto/Test/Deep/.packlist \
+	  lib/perl5/i486-linux-gnu-thread-multi/auto/Test/WWW/Mechanize/Catalyst/.packlist blib/lib/perl5/i486-linux-gnu-thread-multi/auto/Test/WWW/Mechanize/Catalyst/.packlist \
+	  lib/perl5/i486-linux-gnu-thread-multi/auto/Catalyst/Plugin/Session/State/Cookie/.packlist blib/lib/perl5/i486-linux-gnu-thread-multi/auto/Catalyst/Plugin/Session/State/Cookie/.packlist \
+	  lib/perl5/Test/Deep/Cache/Simple.pm blib/lib/perl5/Test/Deep/Cache/Simple.pm \
+	  lib/perl5/Test/Deep/Boolean.pm blib/lib/perl5/Test/Deep/Boolean.pm \
+	  lib/perl5/Test/Deep/RegexpRef.pm blib/lib/perl5/Test/Deep/RegexpRef.pm \
+	  lib/perl5/Catalyst/Action/Deserialize.pm blib/lib/perl5/Catalyst/Action/Deserialize.pm \
+	  lib/perl5/Pod/Wordlist.pod blib/lib/perl5/Pod/Wordlist.pod \
+	  lib/perl5/Data/Serializer/XML/Dumper.pm blib/lib/perl5/Data/Serializer/XML/Dumper.pm \
+	  lib/perl5/Test/Deep/RegexpRefOnly.pm blib/lib/perl5/Test/Deep/RegexpRefOnly.pm \
+	  lib/perl5/Test/Deep/Ref.pm blib/lib/perl5/Test/Deep/Ref.pm \
+	  lib/perl5/Test/Deep/HashEach.pm blib/lib/perl5/Test/Deep/HashEach.pm \
+	  lib/perl5/i486-linux-gnu-thread-multi/auto/Carp/Assert/.packlist blib/lib/perl5/i486-linux-gnu-thread-multi/auto/Carp/Assert/.packlist \
+	  lib/perl5/URI/Find.pm blib/lib/perl5/URI/Find.pm \
+	  lib/perl5/Test/Deep/HashKeys.pm blib/lib/perl5/Test/Deep/HashKeys.pm \
+	  lib/perl5/Test/Deep/RegexpOnly.pm blib/lib/perl5/Test/Deep/RegexpOnly.pm \
+	  lib/perl5/Test/Deep/ArrayEach.pm blib/lib/perl5/Test/Deep/ArrayEach.pm \
+	  lib/perl5/Test/Deep/ArrayLength.pm blib/lib/perl5/Test/Deep/ArrayLength.pm \
+	  lib/perl5/i486-linux-gnu-thread-multi/perllocal.pod blib/lib/perl5/i486-linux-gnu-thread-multi/perllocal.pod \
+	  lib/perl5/Data/Serializer/PHP/Serialization.pm blib/lib/perl5/Data/Serializer/PHP/Serialization.pm \
+	  lib/perl5/Test/Deep/Cmp.pm blib/lib/perl5/Test/Deep/Cmp.pm \
+	  lib/perl5/Test/Deep/NoTest.pm blib/lib/perl5/Test/Deep/NoTest.pm \
+	  lib/perl5/Data/Serializer/Config/General.pm blib/lib/perl5/Data/Serializer/Config/General.pm \
+	  lib/perl5/UNIVERSAL/isa.pm blib/lib/perl5/UNIVERSAL/isa.pm 
+	$(NOECHO) $(ABSPERLRUN) -MExtUtils::Install -e 'pm_to_blib({@ARGV}, '\''$(INST_LIB)/auto'\'', '\''$(PM_FILTER)'\'')' -- \
+	  lib/perl5/i486-linux-gnu-thread-multi/auto/Data/Serializer/.packlist blib/lib/perl5/i486-linux-gnu-thread-multi/auto/Data/Serializer/.packlist \
+	  lib/perl5/i486-linux-gnu-thread-multi/auto/String/Format/.packlist blib/lib/perl5/i486-linux-gnu-thread-multi/auto/String/Format/.packlist \
+	  lib/perl5/Test/Deep/Hash.pm blib/lib/perl5/Test/Deep/Hash.pm \
+	  lib/perl5/String/Format.pm blib/lib/perl5/String/Format.pm \
+	  lib/perl5/Catalyst/Action/REST.pm blib/lib/perl5/Catalyst/Action/REST.pm \
+	  lib/perl5/Catalyst/Action/Serialize/Data/Serializer.pm blib/lib/perl5/Catalyst/Action/Serialize/Data/Serializer.pm \
+	  lib/perl5/Catalyst/Action/Serialize/YAML.pm blib/lib/perl5/Catalyst/Action/Serialize/YAML.pm \
+	  lib/perl5/Test/Deep/Isa.pm blib/lib/perl5/Test/Deep/Isa.pm \
+	  lib/perl5/Catalyst/Action/Deserialize/XML/Simple.pm blib/lib/perl5/Catalyst/Action/Deserialize/XML/Simple.pm \
+	  lib/perl5/Test/Deep/ScalarRefOnly.pm blib/lib/perl5/Test/Deep/ScalarRefOnly.pm \
+	  lib/perl5/i486-linux-gnu-thread-multi/auto/Pod/Spell/.packlist blib/lib/perl5/i486-linux-gnu-thread-multi/auto/Pod/Spell/.packlist \
+	  lib/perl5/Test/Deep/ScalarRef.pm blib/lib/perl5/Test/Deep/ScalarRef.pm \
+	  lib/perl5/Test/Deep/Code.pm blib/lib/perl5/Test/Deep/Code.pm \
+	  lib/perl5/Catalyst/Action/Deserialize/View.pm blib/lib/perl5/Catalyst/Action/Deserialize/View.pm \
+	  lib/perl5/i486-linux-gnu-thread-multi/auto/UNIVERSAL/isa/.packlist blib/lib/perl5/i486-linux-gnu-thread-multi/auto/UNIVERSAL/isa/.packlist \
 	  lib/perl5/Carp/Assert.pm blib/lib/perl5/Carp/Assert.pm \
 	  lib/perl5/i486-linux-gnu-thread-multi/auto/Carp/Assert/More/.packlist blib/lib/perl5/i486-linux-gnu-thread-multi/auto/Carp/Assert/More/.packlist \
 	  lib/perl5/Data/Serializer/YAML/Syck.pm blib/lib/perl5/Data/Serializer/YAML/Syck.pm \
 	  lib/perl5/Catalyst/Request/REST.pm blib/lib/perl5/Catalyst/Request/REST.pm \
 	  lib/perl5/i486-linux-gnu-thread-multi/auto/CGI/Expand/.packlist blib/lib/perl5/i486-linux-gnu-thread-multi/auto/CGI/Expand/.packlist \
-	  lib/perl5/i486-linux-gnu-thread-multi/auto/Catalyst/Controller/DBIC/API/.packlist blib/lib/perl5/i486-linux-gnu-thread-multi/auto/Catalyst/Controller/DBIC/API/.packlist \
-	  lib/perl5/Data/Serializer/JSON.pm blib/lib/perl5/Data/Serializer/JSON.pm \
+	  lib/perl5/Test/Deep/RefType.pm blib/lib/perl5/Test/Deep/RefType.pm \
 	  lib/perl5/i486-linux-gnu-thread-multi/auto/Test/WWW/Mechanize/.packlist blib/lib/perl5/i486-linux-gnu-thread-multi/auto/Test/WWW/Mechanize/.packlist \
-	  lib/perl5/Data/Serializer/FreezeThaw.pm blib/lib/perl5/Data/Serializer/FreezeThaw.pm \
-	  lib/perl5/Data/Serializer/Storable.pm blib/lib/perl5/Data/Serializer/Storable.pm \
-	  lib/perl5/Catalyst/Action/Serialize.pm blib/lib/perl5/Catalyst/Action/Serialize.pm 
-	$(NOECHO) $(ABSPERLRUN) -MExtUtils::Install -e 'pm_to_blib({@ARGV}, '\''$(INST_LIB)/auto'\'', '\''$(PM_FILTER)'\'')' -- \
-	  lib/perl5/Data/Serializer/Data/Denter.pm blib/lib/perl5/Data/Serializer/Data/Denter.pm \
-	  lib/perl5/Data/Serializer/JSON/Syck.pm blib/lib/perl5/Data/Serializer/JSON/Syck.pm \
-	  lib/perl5/Catalyst/Controller/REST.pm blib/lib/perl5/Catalyst/Controller/REST.pm \
+	  lib/perl5/Catalyst/Action/Serialize.pm blib/lib/perl5/Catalyst/Action/Serialize.pm \
 	  lib/perl5/i486-linux-gnu-thread-multi/auto/URI/Find/.packlist blib/lib/perl5/i486-linux-gnu-thread-multi/auto/URI/Find/.packlist \
-	  lib/perl5/Catalyst/Action/Deserialize/JSON.pm blib/lib/perl5/Catalyst/Action/Deserialize/JSON.pm \
 	  lib/perl5/Catalyst/Controller/DBIC/API/RPC.pm blib/lib/perl5/Catalyst/Controller/DBIC/API/RPC.pm \
-	  lib/perl5/i486-linux-gnu-thread-multi/auto/Catalyst/Action/REST/.packlist blib/lib/perl5/i486-linux-gnu-thread-multi/auto/Catalyst/Action/REST/.packlist \
 	  lib/perl5/Data/Serializer/XML/Simple.pm blib/lib/perl5/Data/Serializer/XML/Simple.pm \
-	  lib/perl5/Carp/Assert/More.pm blib/lib/perl5/Carp/Assert/More.pm \
+	  lib/perl5/Test/Deep.pm blib/lib/perl5/Test/Deep.pm \
+	  lib/perl5/Carp/Assert/More.pm blib/lib/perl5/Carp/Assert/More.pm 
+	$(NOECHO) $(ABSPERLRUN) -MExtUtils::Install -e 'pm_to_blib({@ARGV}, '\''$(INST_LIB)/auto'\'', '\''$(PM_FILTER)'\'')' -- \
 	  lib/perl5/Catalyst/Controller/DBIC/API.pm blib/lib/perl5/Catalyst/Controller/DBIC/API.pm \
-	  lib/perl5/Test/WWW/Mechanize/Catalyst.pm blib/lib/perl5/Test/WWW/Mechanize/Catalyst.pm \
 	  lib/perl5/Catalyst/Controller/DBIC/API/Base.pm blib/lib/perl5/Catalyst/Controller/DBIC/API/Base.pm \
 	  lib/perl5/Catalyst/Action/Serialize/JSON.pm blib/lib/perl5/Catalyst/Action/Serialize/JSON.pm \
 	  lib/perl5/CGI/Expand.pm blib/lib/perl5/CGI/Expand.pm \
-	  lib/perl5/i486-linux-gnu-thread-multi/auto/Test/WWW/Mechanize/Catalyst/.packlist blib/lib/perl5/i486-linux-gnu-thread-multi/auto/Test/WWW/Mechanize/Catalyst/.packlist \
 	  lib/perl5/Catalyst/Action/SerializeBase.pm blib/lib/perl5/Catalyst/Action/SerializeBase.pm \
-	  lib/perl5/i486-linux-gnu-thread-multi/auto/Catalyst/Plugin/Session/State/Cookie/.packlist blib/lib/perl5/i486-linux-gnu-thread-multi/auto/Catalyst/Plugin/Session/State/Cookie/.packlist \
 	  lib/perl5/Test/WWW/Mechanize.pm blib/lib/perl5/Test/WWW/Mechanize.pm \
 	  lib/perl5/Catalyst/Action/Serialize/YAML/HTML.pm blib/lib/perl5/Catalyst/Action/Serialize/YAML/HTML.pm \
-	  lib/perl5/Catalyst/Action/Deserialize.pm blib/lib/perl5/Catalyst/Action/Deserialize.pm \
-	  lib/perl5/Data/Serializer/XML/Dumper.pm blib/lib/perl5/Data/Serializer/XML/Dumper.pm \
-	  lib/perl5/URI/Find.pm blib/lib/perl5/URI/Find.pm \
-	  lib/perl5/i486-linux-gnu-thread-multi/auto/Carp/Assert/.packlist blib/lib/perl5/i486-linux-gnu-thread-multi/auto/Carp/Assert/.packlist \
+	  lib/perl5/Pod/Wordlist.pm blib/lib/perl5/Pod/Wordlist.pm \
+	  lib/perl5/Test/Deep/Any.pm blib/lib/perl5/Test/Deep/Any.pm \
+	  lib/perl5/Test/Deep/String.pm blib/lib/perl5/Test/Deep/String.pm \
+	  lib/perl5/Test/Deep/ListMethods.pm blib/lib/perl5/Test/Deep/ListMethods.pm \
+	  lib/perl5/Test/Deep/ArrayLengthOnly.pm blib/lib/perl5/Test/Deep/ArrayLengthOnly.pm \
 	  lib/perl5/Catalyst/Action/Serialize/View.pm blib/lib/perl5/Catalyst/Action/Serialize/View.pm \
-	  lib/perl5/Data/Serializer/YAML.pm blib/lib/perl5/Data/Serializer/YAML.pm \
 	  lib/perl5/Data/Serializer/Cookbook.pm blib/lib/perl5/Data/Serializer/Cookbook.pm \
-	  lib/perl5/i486-linux-gnu-thread-multi/perllocal.pod blib/lib/perl5/i486-linux-gnu-thread-multi/perllocal.pod 
-	$(NOECHO) $(ABSPERLRUN) -MExtUtils::Install -e 'pm_to_blib({@ARGV}, '\''$(INST_LIB)/auto'\'', '\''$(PM_FILTER)'\'')' -- \
-	  lib/perl5/Data/Serializer/PHP/Serialization.pm blib/lib/perl5/Data/Serializer/PHP/Serialization.pm \
+	  lib/perl5/Data/Serializer/YAML.pm blib/lib/perl5/Data/Serializer/YAML.pm \
 	  lib/perl5/Catalyst/Action/Deserialize/Data/Serializer.pm blib/lib/perl5/Catalyst/Action/Deserialize/Data/Serializer.pm \
+	  lib/perl5/Test/Deep/All.pm blib/lib/perl5/Test/Deep/All.pm \
+	  lib/perl5/Test/Deep/Class.pm blib/lib/perl5/Test/Deep/Class.pm \
 	  lib/perl5/URI/Find/Schemeless.pm blib/lib/perl5/URI/Find/Schemeless.pm \
-	  lib/perl5/Data/Serializer/Config/General.pm blib/lib/perl5/Data/Serializer/Config/General.pm \
 	  lib/perl5/Catalyst/Plugin/Session/State/Cookie.pm blib/lib/perl5/Catalyst/Plugin/Session/State/Cookie.pm \
+	  lib/perl5/Test/Deep/RegexpMatches.pm blib/lib/perl5/Test/Deep/RegexpMatches.pm \
 	  lib/perl5/Test/LongString.pm blib/lib/perl5/Test/LongString.pm 
 	$(NOECHO) $(TOUCH) pm_to_blib
 
@@ -1136,6 +1359,25 @@ pm_to_blib : $(TO_INST_PM)
 
 # End.
 # Postamble by Module::Install 0.91
+# --- Module::Install::Admin::Makefile section:
+
+realclean purge ::
+	$(RM_F) $(DISTVNAME).tar$(SUFFIX)
+	$(RM_F) MANIFEST.bak _build
+	$(PERL) "-Ilib" "-MModule::Install::Admin" -e "remove_meta()"
+	$(RM_RF) inc
+
+reset :: purge
+
+upload :: test dist
+	cpan-upload -verbose $(DISTVNAME).tar$(SUFFIX)
+
+grok ::
+	perldoc Module::Install
+
+distsign ::
+	cpansign -s
+
 # --- Module::Install::AutoInstall section:
 
 config :: installdeps

@@ -13,13 +13,20 @@ __PACKAGE__->config(
     create_allows           =>  [qw/last_updated_on/], # additional non-required columns that create allows
     update_allows           =>  [qw/cd position title last_updated_on/], # columns that update allows
     list_returns            =>  [qw/trackid cd position title last_updated_on/], # columns that list returns
-    list_prefetch           =>  [qw//], # relationships that are prefetched
-                                                            # when no prefetch param is passed
+
+
     list_prefetch_allows    =>  [ # every possible prefetch param allowed
-        
+        [qw/cd_to_producer/], {  'cd_to_producer' => [qw//] },
+		[qw/tags/], {  'tags' => [qw//] },
+		[qw/tracks/], {  'tracks' => [qw//] },
+		
     ],
+
     list_ordered_by         => [qw/trackid/], # order of generated list
-    list_search_exposes     => [qw/trackid cd position title last_updated_on/], # columns that can be searched on via list
+    list_search_exposes     => [
+        qw/trackid cd position title last_updated_on/,
+        
+    ], # columns that can be searched on via list
 );
 
 =head1 NAME

@@ -111,20 +111,26 @@ sub mk_compclass {
             my @create_requires;
             my @create_allows;
             my @update_allows;
+            my @list_prefetch;
             my @list_search_exposes = my @list_returns = $schema->source($source)->columns;
             
             ### HAIRY RELATIONSHIPS STUFF
-            my @list_prefetch_allows = _return_has_many_list($schema->source($source)->_relationships);
+            my @sub_list_search_exposes = my @list_prefetch_allows = _return_has_many_list($schema->source($source)->_relationships);
             @list_prefetch_allows = map {
                 my $ref = $_;
-                qq|'$ref->[0]', { |
-                . $ref->[0]
-                . qq| => [qw/|
+                qq|[qw/$ref->[0]/], { |
+                . qq| '$ref->[0]' => [qw/|
                 . join (' ', map { $_->[0] } _return_has_many_list($schema->source($ref->[1])->_relationships))
                 . qq|/] },\n\t\t|;
             } @list_prefetch_allows;
             ### END HAIRY RELATIONSHIP STUFF
 
+            @sub_list_search_exposes = map {
+                my $ref = $_;
+                qq|{ '$ref->[0]' => [qw/|
+                . join ( ' ', $schema->source($ref->[1])->columns )
+                . qq|/] },\n\t\t|;
+            } @sub_list_search_exposes;
 
             my @list_ordered_by = $schema->source($source)->primary_columns;
 
@@ -150,8 +156,10 @@ sub mk_compclass {
             $helper->{create_allows} = join(' ', @create_allows);
             $helper->{list_returns} = join(' ', @list_returns);
             $helper->{list_search_exposes} = join(' ', @list_search_exposes);
+            $helper->{sub_list_search_exposes} = join('', @sub_list_search_exposes);
             $helper->{update_allows} = join(' ', @update_allows);
-            $helper->{list_prefetch_allows} = join('', @list_prefetch_allows);
+            $helper->{list_prefetch_allows} = join('', @list_prefetch_allows) if scalar @list_prefetch_allows > 0;
+            $helper->{list_prefetch} = join(', ', map { qq|'$_->[0]'|  } @list_prefetch) if scalar @list_prefetch > 0; 
             $helper->{list_ordered_by} = join(' ', @list_ordered_by);
             $helper->render_file( 'compclass', $file );
             $helper->{test} = $helper->next_test($source);
@@ -240,13 +248,19 @@ __PACKAGE__->config(
     create_allows           =>  [qw/[% create_allows %]/], # additional non-required columns that create allows
     update_allows           =>  [qw/[% update_allows %]/], # columns that update allows
     list_returns            =>  [qw/[% list_returns %]/], # columns that list returns
-    list_prefetch           =>  [qw/[% list_prefetch  %]/], # relationships that are prefetched
-                                                            # when no prefetch param is passed
+[% IF list_prefetch %]
+    list_prefetch           =>  [[% list_prefetch %]], # relationships prefetched by default  
+[% END %]
+[% IF list_prefetch_allows %]
     list_prefetch_allows    =>  [ # every possible prefetch param allowed
         [% list_prefetch_allows %]
     ],
+[% END %]
     list_ordered_by         => [qw/[% list_ordered_by %]/], # order of generated list
-    list_search_exposes     => [qw/[% list_search_exposes %]/], # columns that can be searched on via list
+    list_search_exposes     => [
+        qw/[% list_search_exposes %]/,
+        [% sub_list_search_exposes %]
+    ], # columns that can be searched on via list
 );
 
 =head1 NAME
