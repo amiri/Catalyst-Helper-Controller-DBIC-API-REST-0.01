@@ -4,15 +4,18 @@ use strict;
 use FindBin;
 use File::Spec;
 use lib "$FindBin::Bin/../lib";
+
+=head1 VERSION
+
+Version 0.01
+
+=cut
+
 our $VERSION = '0.01';
 
 =head1 NAME
 
 Catalyst::Helper::Controller::DBIC::API::REST
-
-=head1 VERSION
-
-Version 0.01
 
 =head1 SYNOPSIS
 
@@ -20,17 +23,123 @@ Version 0.01
     $ cd myapp
     $ script/myapp_create.pl controller API::REST DBIC::API::REST myapp
 
+    ...
+
+    package myapp::Controller::API::REST::Producer;
+
+    use strict;
+    use warnings;
+    use base qw/myapp::ControllerBase::REST/;
+    use JSON::Syck;
+
+    __PACKAGE__->config(
+        action                  =>  { setup => { PathPart => 'producer', Chained => '/api/rest/rest_base' } },
+                                    # define parent chain action and partpath
+        class                   =>  'DB::Producer', # DBIC result class
+        create_requires         =>  [qw/name/], # columns required to create
+        create_allows           =>  [qw//], # additional non-required columns that create allows
+        update_allows           =>  [qw/name/], # columns that update allows
+        list_returns            =>  [qw/producerid name/], # columns that list returns
+
+
+        list_prefetch_allows    =>  [ # every possible prefetch param allowed
+            [qw/cd_to_producer/], {  'cd_to_producer' => [qw//] },
+            [qw/tags/], {  'tags' => [qw//] },
+            [qw/tracks/], {  'tracks' => [qw//] },
+            
+        ],
+
+        list_ordered_by         => [qw/producerid/], # order of generated list
+        list_search_exposes     => [
+            qw/producerid name/,
+            
+        ], # columns that can be searched on via list
+    );
+
 =head1 DESCRIPTION
 
-  This creates REST controllers for all the classes in your Catalyst app. Your application should access your model at myapp::Model::DB. If your result classes are not at that location, this will probably still work, but not optimally.
+  This creates REST controllers according to the specifications at L<Catalyst::Controller::DBIC::API> and L<Catalyst::Controller::DBIC::API::REST> for all the classes in your Catalyst app. Your application must access your model at myapp::Model::DB.
 
-=cut
+  It creates the following files:
+    
+    myapp/lib/myapp/Controller/API.pm
+    myapp/lib/myapp/Controller/API/REST.pm
+    myapp/lib/myapp/Controller/API/REST/*   (this is where the individual class controllers are located)
+    myapp/lib/myapp/ControllerBase/REST.pm
 
-=over
+=head2 CONFIGURATION
 
-=item mk_compclass
+    The idea is to make configuration as painless and as automatic as possible, so most of the work has been done for you.
+    
+    There are 8 __PACKAGE__->config(...) options for L<Catalyst::Controller::DBIC::API/CONFIGURATION>. Here are the defaults.
+    
+=head2 create_requires
 
-This is the meat of the helper. It writes the API.pm, REST.pm and result class controllers. It replaces $helper->{} values as it goes through, rendering the files for each.
+    All non-nullable columns that are (1) not autoincrementing, (2) don't have a default value, are neither (3) nextvals, (4) sequences, or (5) timestamps    
+
+=head2 create_allows
+
+    All nullable columns that are (1) not autoincrementing, (2) don't have a default value, are neither (3) nextvals, (4) sequences, or (5) timestamps.
+
+=head2 update_allows
+
+    The union of create_requires and create_allows.    
+
+=head2 list_returns
+
+    Every column in the class.
+
+=head2 list_prefetch
+
+    Nothing is prefetched by default.
+
+=head2 list_prefetch_allows
+
+    (1) An arrayref consisting of the name of each of the class's has_many relationships, accompanied by (2) a hashref keyed on the name of that relationship, whose values are the names of its has_many's, e.g., in the "Producer" controller above, a Producer has many cd_to_producers, many tags, and many tracks. None of those classes have any has_many's:
+
+    list_prefetch_allows    =>  [
+        [qw/cd_to_producer/], {  'cd_to_producer' => [qw//] },
+        [qw/tags/], {  'tags' => [qw//] },
+        [qw/tracks/], {  'tracks' => [qw//] },
+    ],
+
+=head2 list_ordered_by
+
+    The primary key.
+
+=head2 list_search_exposes
+    
+    (1) An arrayref consisting of the name of each column in the class, and (2) a hashref keyed on the name of each of the class's has many relationships, the values of which are all the columns in the corresponding class, e.g., 
+
+    list_search_exposes     => [
+        qw/cdid artist title year/,
+        { 'cd_to_producer' => [qw/cd producer/] },
+        { 'tags' => [qw/tagid cd tag/] },
+        { 'tracks' => [qw/trackid cd position title last_updated_on/] },
+    ], # columns that can be searched on via list
+
+=head1 CONTROLLERBASE
+
+    Following the advice in L<Catalyst::Controller::DBIC::API/EXTENDING>, this module creates an intermediate class between your controllers and L<Catalyst::Controller::DBIC::API::REST>. It contains one method, create, which serializes object information and stores it in the stash, which is not the default behavior.
+
+=head1 METHODS
+
+=head2 mk_compclass
+
+This is the meat of the helper. It writes the directory structure if it is not in place, API.pm, REST.pm, the controllerbase, and the result class controllers. It replaces $helper->{} values as it goes through, rendering the files for each.
+
+=back
+
+=head1 AUTHOR
+
+Amiri Barksdale E<lt>amiri@metalabel.comE<gt>
+
+=head1 SEE ALSO
+
+=head1 LICENSE
+
+This library is free software; you can redistribute it and/or modify
+it under the same terms as Perl itself.
 
 =cut
 
@@ -38,12 +147,8 @@ sub mk_compclass {
     my ( $self, $helper, $schema_class ) = @_;
     $helper->{schema_class} = $schema_class;
 
-#    print "Script and prefix: ", $helper->{script}, " ", $helper->{appprefix}, "\n";
-#    print "Helper: ", Dumper $helper;
     $helper->{script} = File::Spec->catdir( $helper->{dir}, 'script' ); 
     $helper->{appprefix} = Catalyst::Utils::appprefix($helper->{name});
-#    print "Script and prefix: ", $helper->{script}, " ", $helper->{appprefix}, "\n";
-#    print "Helper: ", Dumper $helper;
         ## Connect to schema for class info
         my $schema_file = "$schema_class\/Schema";
         require "$schema_file.pm";
@@ -123,7 +228,6 @@ sub mk_compclass {
                 . join (' ', map { $_->[0] } _return_has_many_list($schema->source($ref->[1])->_relationships))
                 . qq|/] },\n\t\t|;
             } @list_prefetch_allows;
-            ### END HAIRY RELATIONSHIP STUFF
 
             @sub_list_search_exposes = map {
                 my $ref = $_;
@@ -131,7 +235,8 @@ sub mk_compclass {
                 . join ( ' ', $schema->source($ref->[1])->columns )
                 . qq|/] },\n\t\t|;
             } @sub_list_search_exposes;
-
+            ### END HAIRY RELATIONSHIP STUFF
+            
             my @list_ordered_by = $schema->source($source)->primary_columns;
 
             ### Prepare hash of column info for this class, so we can extract config
@@ -173,21 +278,6 @@ sub _return_has_many_list {
 }
 
 1;
-
-=back
-
-=head1 AUTHOR
-
-Amiri Barksdale E<lt>amiri@metalabel.comE<gt>
-
-=head1 SEE ALSO
-
-=head1 LICENSE
-
-This library is free software; you can redistribute it and/or modify
-it under the same terms as Perl itself.
-
-=cut
 
 __DATA__
 __apibase__
@@ -288,4 +378,3 @@ L<Catalyst::Controller::DBIC::API::RPC>
 =cut
 
 1;
-

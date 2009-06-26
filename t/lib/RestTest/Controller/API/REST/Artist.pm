@@ -53,4 +53,3 @@ L<Catalyst::Controller::DBIC::API::RPC>
 =cut
 
 1;
-

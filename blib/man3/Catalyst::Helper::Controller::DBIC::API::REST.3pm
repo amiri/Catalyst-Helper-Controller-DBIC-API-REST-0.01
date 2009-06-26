@@ -137,26 +137,133 @@
 .\" way too many mistakes in technical documents.
 .if n .ad l
 .nh
-.SH "NAME"
-Catalyst::Helper::Controller::DBIC::API::REST
 .SH "VERSION"
 .IX Header "VERSION"
 Version 0.01
+.SH "NAME"
+Catalyst::Helper::Controller::DBIC::API::REST
 .SH "SYNOPSIS"
 .IX Header "SYNOPSIS"
 .Vb 3
 \&    $ catalyst.pl myapp
 \&    $ cd myapp
 \&    $ script/myapp_create.pl controller API::REST DBIC::API::REST myapp
+\&
+\&    ...
+\&
+\&    package myapp::Controller::API::REST::Producer;
+\&
+\&    use strict;
+\&    use warnings;
+\&    use base qw/myapp::ControllerBase::REST/;
+\&    use JSON::Syck;
+\&
+\&    _\|_PACKAGE_\|_\->config(
+\&        action                  =>  { setup => { PathPart => \*(Aqproducer\*(Aq, Chained => \*(Aq/api/rest/rest_base\*(Aq } },
+\&                                    # define parent chain action and partpath
+\&        class                   =>  \*(AqDB::Producer\*(Aq, # DBIC result class
+\&        create_requires         =>  [qw/name/], # columns required to create
+\&        create_allows           =>  [qw//], # additional non\-required columns that create allows
+\&        update_allows           =>  [qw/name/], # columns that update allows
+\&        list_returns            =>  [qw/producerid name/], # columns that list returns
+\&
+\&
+\&        list_prefetch_allows    =>  [ # every possible prefetch param allowed
+\&            [qw/cd_to_producer/], {  \*(Aqcd_to_producer\*(Aq => [qw//] },
+\&            [qw/tags/], {  \*(Aqtags\*(Aq => [qw//] },
+\&            [qw/tracks/], {  \*(Aqtracks\*(Aq => [qw//] },
+\&            
+\&        ],
+\&
+\&        list_ordered_by         => [qw/producerid/], # order of generated list
+\&        list_search_exposes     => [
+\&            qw/producerid name/,
+\&            
+\&        ], # columns that can be searched on via list
+\&    );
 .Ve
 .SH "DESCRIPTION"
 .IX Header "DESCRIPTION"
 .Vb 1
-\&  This creates REST controllers for all the classes in your Catalyst app. Your application should access your model at myapp::Model::DB. If your result classes are not at that location, this will probably still work, but not optimally.
+\&  This creates REST controllers according to the specifications at L<Catalyst::Controller::DBIC::API> and L<Catalyst::Controller::DBIC::API::REST> for all the classes in your Catalyst app. Your application must access your model at myapp::Model::DB.
+\&
+\&  It creates the following files:
+\&    
+\&    myapp/lib/myapp/Controller/API.pm
+\&    myapp/lib/myapp/Controller/API/REST.pm
+\&    myapp/lib/myapp/Controller/API/REST/*   (this is where the individual class controllers are located)
+\&    myapp/lib/myapp/ControllerBase/REST.pm
 .Ve
-.IP "mk_compclass" 4
-.IX Item "mk_compclass"
-This is the meat of the helper. It writes the \s-1API\s0.pm, \s-1REST\s0.pm and result class controllers. It replaces \f(CW$helper\fR\->{} values as it goes through, rendering the files for each.
+.Sh "\s-1CONFIGURATION\s0"
+.IX Subsection "CONFIGURATION"
+.Vb 1
+\&    The idea is to make configuration as painless and as automatic as possible, so most of the work has been done for you.
+\&    
+\&    There are 8 _\|_PACKAGE_\|_\->config(...) options for L<Catalyst::Controller::DBIC::API/CONFIGURATION>. Here are the defaults.
+.Ve
+.Sh "create_requires"
+.IX Subsection "create_requires"
+.Vb 1
+\&    All non\-nullable columns that are (1) not autoincrementing, (2) don\*(Aqt have a default value, are neither (3) nextvals, (4) sequences, or (5) timestamps
+.Ve
+.Sh "create_allows"
+.IX Subsection "create_allows"
+.Vb 1
+\&    All nullable columns that are (1) not autoincrementing, (2) don\*(Aqt have a default value, are neither (3) nextvals, (4) sequences, or (5) timestamps.
+.Ve
+.Sh "update_allows"
+.IX Subsection "update_allows"
+.Vb 1
+\&    The union of create_requires and create_allows.
+.Ve
+.Sh "list_returns"
+.IX Subsection "list_returns"
+.Vb 1
+\&    Every column in the class.
+.Ve
+.Sh "list_prefetch"
+.IX Subsection "list_prefetch"
+.Vb 1
+\&    Nothing is prefetched by default.
+.Ve
+.Sh "list_prefetch_allows"
+.IX Subsection "list_prefetch_allows"
+.Vb 1
+\&    (1) An arrayref consisting of the name of each of the class\*(Aqs has_many relationships, accompanied by (2) a hashref keyed on the name of that relationship, whose values are the names of its has_many\*(Aqs, e.g., in the "Producer" controller above, a Producer has many cd_to_producers, many tags, and many tracks. None of those classes have any has_many\*(Aqs:
+\&
+\&    list_prefetch_allows    =>  [
+\&        [qw/cd_to_producer/], {  \*(Aqcd_to_producer\*(Aq => [qw//] },
+\&        [qw/tags/], {  \*(Aqtags\*(Aq => [qw//] },
+\&        [qw/tracks/], {  \*(Aqtracks\*(Aq => [qw//] },
+\&    ],
+.Ve
+.Sh "list_ordered_by"
+.IX Subsection "list_ordered_by"
+.Vb 1
+\&    The primary key.
+.Ve
+.Sh "list_search_exposes"
+.IX Subsection "list_search_exposes"
+.Vb 1
+\&    (1) An arrayref consisting of the name of each column in the class, and (2) a hashref keyed on the name of each of the class\*(Aqs has many relationships, the values of which are all the columns in the corresponding class, e.g., 
+\&
+\&    list_search_exposes     => [
+\&        qw/cdid artist title year/,
+\&        { \*(Aqcd_to_producer\*(Aq => [qw/cd producer/] },
+\&        { \*(Aqtags\*(Aq => [qw/tagid cd tag/] },
+\&        { \*(Aqtracks\*(Aq => [qw/trackid cd position title last_updated_on/] },
+\&    ], # columns that can be searched on via list
+.Ve
+.SH "CONTROLLERBASE"
+.IX Header "CONTROLLERBASE"
+.Vb 1
+\&    Following the advice in L<Catalyst::Controller::DBIC::API/EXTENDING>, this module creates an intermediate class between your controllers and L<Catalyst::Controller::DBIC::API::REST>. It contains one method, create, which serializes object information and stores it in the stash, which is not the default behavior.
+.Ve
+.SH "METHODS"
+.IX Header "METHODS"
+.Sh "mk_compclass"
+.IX Subsection "mk_compclass"
+This is the meat of the helper. It writes the directory structure if it is not in place, \s-1API\s0.pm, \s-1REST\s0.pm, the controllerbase, and the result class controllers. It replaces \f(CW$helper\fR\->{} values as it goes through, rendering the files for each.
 .SH "AUTHOR"
 .IX Header "AUTHOR"
 Amiri Barksdale <amiri@metalabel.com>
@@ -182,3 +289,9 @@ Catalyst::Controller::DBIC::API::RPC
 .SH "LICENSE"
 .IX Header "LICENSE"
 [% license %]
+.SH "POD ERRORS"
+.IX Header "POD ERRORS"
+Hey! \fBThe above document had some coding errors, which are explained below:\fR
+.IP "Around line 131:" 4
+.IX Item "Around line 131:"
+=back without =over

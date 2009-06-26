@@ -10,15 +10,13 @@ my $base = 'http://localhost';
 use RestTest;
 use DBICTest;
 use URI;
-use Test::More tests => 13;
+use Test::More tests => 20;
+
 use Test::Deep;
 use Test::WWW::Mechanize::Catalyst 'RestTest';
 use HTTP::Request::Common;
 use JSON::Syck;
-use Data::Dumper;
 no warnings 'UNIVERSAL::isa';
-
-print Dumper @INC;
 
 my $mech = Test::WWW::Mechanize::Catalyst->new;
 ok(my $schema = DBICTest->init_schema(), 'got schema');
@@ -34,9 +32,12 @@ my $producer_list_url = "$base/api/rest/producer";
   my @expected_response = map { { $_->get_columns } } $schema->resultset('Artist')->all;
   ;
   my $response = JSON::Syck::Load( $mech->content);
-  cmp_deeply( $response->{"list"}[0], superhashof($expected_response[0]), 'correct data in hash returned from list, element 1');
-  cmp_deeply( $response->{"list"}[1], superhashof($expected_response[1]), 'correct data in hash returned from list, element 2');
-  cmp_deeply( $response->{"list"}[2], superhashof($expected_response[2]), 'correct data in hash returned from list, element 3');
+  is( $response->{"list"}[0]->{name}, $expected_response[0]->{name}, 'correct name in hash returned from list, element 1');
+  is( $response->{"list"}[0]->{artistid}, $expected_response[0]->{artistid}, 'correct id in hash returned from list, element 1');
+  is( $response->{"list"}[1]->{name}, $expected_response[1]->{name}, 'correct name in hash returned from list, element 2');
+  is( $response->{"list"}[1]->{artistid}, $expected_response[1]->{artistid}, 'correct id in hash returned from list, element 2');
+  is( $response->{"list"}[2]->{name}, $expected_response[2]->{name}, 'correct name in hash returned from list, element 3');
+  is( $response->{"list"}[2]->{artistid}, $expected_response[2]->{artistid}, 'correct id in hash returned from list, element 3');
 }
 
 {
@@ -48,7 +49,8 @@ my $producer_list_url = "$base/api/rest/producer";
 
   my @expected_response = map { { $_->get_columns } } $schema->resultset('Artist')->search({ artistid => 1 })->all;
   my $response = JSON::Syck::Load( $mech->content);
-  cmp_deeply($response->{"list"}[0], superhashof($expected_response[0]), 'correct data in basic search hash' );
+  is( $response->{"list"}[0]->{name}, $expected_response[0]->{name}, 'correct name in basic search hash');
+  is( $response->{"list"}[0]->{artistid}, $expected_response[0]->{artistid}, 'correct id in basic search hash');
 }
 
 {
@@ -60,7 +62,8 @@ my $producer_list_url = "$base/api/rest/producer";
 
   my @expected_response = map { { $_->get_columns } } $schema->resultset('Artist')->search({ name => { LIKE => '%waul%' }})->all;
   my $response = JSON::Syck::Load( $mech->content);
-  cmp_deeply($response->{"list"}[0], superhashof($expected_response[0]), 'correct data in complex query hash, element 1' );
+  is( $response->{"list"}[0]->{name}, $expected_response[0]->{name}, 'correct name in complex query hash');
+  is( $response->{"list"}[0]->{artistid}, $expected_response[0]->{artistid}, 'correct id in complex query hash');
 }
 
 {
@@ -71,7 +74,9 @@ my $producer_list_url = "$base/api/rest/producer";
 
   my @expected_response = map { { $_->get_columns } } $schema->resultset('Producer')->search({}, { select => ['name'] })->all;
   my $response = JSON::Syck::Load( $mech->content);
-  cmp_deeply($response->{"list"}[0], superhashof($expected_response[0]), 'correct data in complex query hash' );
+  is( $response->{"list"}[0]->{name}, $expected_response[0]->{name}, 'correct name in hash with list_returns, element 1');
+  is( $response->{"list"}[1]->{name}, $expected_response[1]->{name}, 'correct name in hash with list_returns, element 2');
+  is( $response->{"list"}[2]->{name}, $expected_response[2]->{name}, 'correct name in hash with list_returns, element 3');
 }
 
 {
