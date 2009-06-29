@@ -1,5 +1,4 @@
 use inc::Module::Install;
-#use lib 't/lib';
 
 name 'Catalyst-Helper-Controller-DBIC-API-REST';
 all_from 'lib/Catalyst/Helper/Controller/DBIC/API/REST.pm';
@@ -10,7 +9,6 @@ requires 'Catalyst::Controller::DBIC::API::REST';
 
 
 tests "t/*.pl";
-#author_tests 'xt';
 
 build_requires 'Test::More';
 use_test_base;

@@ -58,7 +58,9 @@ Catalyst::Helper::Controller::DBIC::API::REST
 
 =head1 DESCRIPTION
 
-  This creates REST controllers according to the specifications at L<Catalyst::Controller::DBIC::API> and L<Catalyst::Controller::DBIC::API::REST> for all the classes in your Catalyst app. Your application must access your model at myapp::Model::DB.
+  This creates REST controllers according to the specifications at L<Catalyst::Controller::DBIC::API>
+  and L<Catalyst::Controller::DBIC::API::REST> for all the classes in your Catalyst app. Your
+  application must access your model at myapp::Model::DB.
 
   It creates the following files:
     
@@ -69,17 +71,21 @@ Catalyst::Helper::Controller::DBIC::API::REST
 
 =head2 CONFIGURATION
 
-    The idea is to make configuration as painless and as automatic as possible, so most of the work has been done for you.
+    The idea is to make configuration as painless and as automatic as possible, so most
+    of the work has been done for you.
     
-    There are 8 __PACKAGE__->config(...) options for L<Catalyst::Controller::DBIC::API/CONFIGURATION>. Here are the defaults.
+    There are 8 __PACKAGE__->config(...) options for L<Catalyst::Controller::DBIC::API/CONFIGURATION>.
+    Here are the defaults.
     
 =head2 create_requires
 
-    All non-nullable columns that are (1) not autoincrementing, (2) don't have a default value, are neither (3) nextvals, (4) sequences, or (5) timestamps    
+    All non-nullable columns that are (1) not autoincrementing, (2) don't have a default value,
+    are neither (3) nextvals, (4) sequences, nor (5) timestamps.    
 
 =head2 create_allows
 
-    All nullable columns that are (1) not autoincrementing, (2) don't have a default value, are neither (3) nextvals, (4) sequences, or (5) timestamps.
+    All nullable columns that are (1) not autoincrementing, (2) don't have a default value,
+    are neither (3) nextvals, (4) sequences, nor (5) timestamps.
 
 =head2 update_allows
 
@@ -95,7 +101,10 @@ Catalyst::Helper::Controller::DBIC::API::REST
 
 =head2 list_prefetch_allows
 
-    (1) An arrayref consisting of the name of each of the class's has_many relationships, accompanied by (2) a hashref keyed on the name of that relationship, whose values are the names of its has_many's, e.g., in the "Producer" controller above, a Producer has many cd_to_producers, many tags, and many tracks. None of those classes have any has_many's:
+    (1) An arrayref consisting of the name of each of the class's has_many relationships, accompanied
+    by (2) a hashref keyed on the name of that relationship, whose values are the names of its
+    has_many's, e.g., in the "Producer" controller above, a Producer has many cd_to_producers,
+    many tags, and many tracks. None of those classes have any has_many's:
 
     list_prefetch_allows    =>  [
         [qw/cd_to_producer/], {  'cd_to_producer' => [qw//] },
@@ -109,7 +118,9 @@ Catalyst::Helper::Controller::DBIC::API::REST
 
 =head2 list_search_exposes
     
-    (1) An arrayref consisting of the name of each column in the class, and (2) a hashref keyed on the name of each of the class's has many relationships, the values of which are all the columns in the corresponding class, e.g., 
+    (1) An arrayref consisting of the name of each column in the class, and (2) a hashref keyed
+    on the name of each of the class's has many relationships, the values of which are all the
+    columns in the corresponding class, e.g., 
 
     list_search_exposes     => [
         qw/cdid artist title year/,
@@ -120,13 +131,18 @@ Catalyst::Helper::Controller::DBIC::API::REST
 
 =head1 CONTROLLERBASE
 
-    Following the advice in L<Catalyst::Controller::DBIC::API/EXTENDING>, this module creates an intermediate class between your controllers and L<Catalyst::Controller::DBIC::API::REST>. It contains one method, create, which serializes object information and stores it in the stash, which is not the default behavior.
+    Following the advice in L<Catalyst::Controller::DBIC::API/EXTENDING>, this module creates an
+    intermediate class between your controllers and L<Catalyst::Controller::DBIC::API::REST>.
+    It contains one method, create, which serializes object information and stores it in the stash,
+    which is not the default behavior.
 
 =head1 METHODS
 
 =head2 mk_compclass
 
-This is the meat of the helper. It writes the directory structure if it is not in place, API.pm, REST.pm, the controllerbase, and the result class controllers. It replaces $helper->{} values as it goes through, rendering the files for each.
+This is the meat of the helper. It writes the directory structure if it is not in place, API.pm,
+REST.pm, the controllerbase, and the result class controllers. It replaces $helper->{} values as
+it goes through, rendering the files for each.
 
 =back
 
@@ -280,6 +296,9 @@ sub _return_has_many_list {
 1;
 
 __DATA__
+
+=begin pod_to_ignore
+
 __apibase__
 package [% app %]::Controller::API;
 

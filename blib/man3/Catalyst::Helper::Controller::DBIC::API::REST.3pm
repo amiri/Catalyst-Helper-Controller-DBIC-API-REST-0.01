@@ -132,7 +132,7 @@
 .\" ========================================================================
 .\"
 .IX Title "Catalyst::Helper::Controller::DBIC::API::REST 3"
-.TH Catalyst::Helper::Controller::DBIC::API::REST 3 "2009-06-25" "perl v5.10.0" "User Contributed Perl Documentation"
+.TH Catalyst::Helper::Controller::DBIC::API::REST 3 "2009-06-29" "perl v5.10.0" "User Contributed Perl Documentation"
 .\" For nroff, turn off justification.  Always turn off hyphenation; it makes
 .\" way too many mistakes in technical documents.
 .if n .ad l
@@ -184,8 +184,10 @@ Catalyst::Helper::Controller::DBIC::API::REST
 .Ve
 .SH "DESCRIPTION"
 .IX Header "DESCRIPTION"
-.Vb 1
-\&  This creates REST controllers according to the specifications at L<Catalyst::Controller::DBIC::API> and L<Catalyst::Controller::DBIC::API::REST> for all the classes in your Catalyst app. Your application must access your model at myapp::Model::DB.
+.Vb 3
+\&  This creates REST controllers according to the specifications at L<Catalyst::Controller::DBIC::API>
+\&  and L<Catalyst::Controller::DBIC::API::REST> for all the classes in your Catalyst app. Your
+\&  application must access your model at myapp::Model::DB.
 \&
 \&  It creates the following files:
 \&    
@@ -196,20 +198,24 @@ Catalyst::Helper::Controller::DBIC::API::REST
 .Ve
 .Sh "\s-1CONFIGURATION\s0"
 .IX Subsection "CONFIGURATION"
-.Vb 1
-\&    The idea is to make configuration as painless and as automatic as possible, so most of the work has been done for you.
+.Vb 2
+\&    The idea is to make configuration as painless and as automatic as possible, so most
+\&    of the work has been done for you.
 \&    
-\&    There are 8 _\|_PACKAGE_\|_\->config(...) options for L<Catalyst::Controller::DBIC::API/CONFIGURATION>. Here are the defaults.
+\&    There are 8 _\|_PACKAGE_\|_\->config(...) options for L<Catalyst::Controller::DBIC::API/CONFIGURATION>.
+\&    Here are the defaults.
 .Ve
 .Sh "create_requires"
 .IX Subsection "create_requires"
-.Vb 1
-\&    All non\-nullable columns that are (1) not autoincrementing, (2) don\*(Aqt have a default value, are neither (3) nextvals, (4) sequences, or (5) timestamps
+.Vb 2
+\&    All non\-nullable columns that are (1) not autoincrementing, (2) don\*(Aqt have a default value,
+\&    are neither (3) nextvals, (4) sequences, nor (5) timestamps.
 .Ve
 .Sh "create_allows"
 .IX Subsection "create_allows"
-.Vb 1
-\&    All nullable columns that are (1) not autoincrementing, (2) don\*(Aqt have a default value, are neither (3) nextvals, (4) sequences, or (5) timestamps.
+.Vb 2
+\&    All nullable columns that are (1) not autoincrementing, (2) don\*(Aqt have a default value,
+\&    are neither (3) nextvals, (4) sequences, nor (5) timestamps.
 .Ve
 .Sh "update_allows"
 .IX Subsection "update_allows"
@@ -228,8 +234,11 @@ Catalyst::Helper::Controller::DBIC::API::REST
 .Ve
 .Sh "list_prefetch_allows"
 .IX Subsection "list_prefetch_allows"
-.Vb 1
-\&    (1) An arrayref consisting of the name of each of the class\*(Aqs has_many relationships, accompanied by (2) a hashref keyed on the name of that relationship, whose values are the names of its has_many\*(Aqs, e.g., in the "Producer" controller above, a Producer has many cd_to_producers, many tags, and many tracks. None of those classes have any has_many\*(Aqs:
+.Vb 4
+\&    (1) An arrayref consisting of the name of each of the class\*(Aqs has_many relationships, accompanied
+\&    by (2) a hashref keyed on the name of that relationship, whose values are the names of its
+\&    has_many\*(Aqs, e.g., in the "Producer" controller above, a Producer has many cd_to_producers,
+\&    many tags, and many tracks. None of those classes have any has_many\*(Aqs:
 \&
 \&    list_prefetch_allows    =>  [
 \&        [qw/cd_to_producer/], {  \*(Aqcd_to_producer\*(Aq => [qw//] },
@@ -244,8 +253,10 @@ Catalyst::Helper::Controller::DBIC::API::REST
 .Ve
 .Sh "list_search_exposes"
 .IX Subsection "list_search_exposes"
-.Vb 1
-\&    (1) An arrayref consisting of the name of each column in the class, and (2) a hashref keyed on the name of each of the class\*(Aqs has many relationships, the values of which are all the columns in the corresponding class, e.g., 
+.Vb 3
+\&    (1) An arrayref consisting of the name of each column in the class, and (2) a hashref keyed
+\&    on the name of each of the class\*(Aqs has many relationships, the values of which are all the
+\&    columns in the corresponding class, e.g., 
 \&
 \&    list_search_exposes     => [
 \&        qw/cdid artist title year/,
@@ -256,14 +267,19 @@ Catalyst::Helper::Controller::DBIC::API::REST
 .Ve
 .SH "CONTROLLERBASE"
 .IX Header "CONTROLLERBASE"
-.Vb 1
-\&    Following the advice in L<Catalyst::Controller::DBIC::API/EXTENDING>, this module creates an intermediate class between your controllers and L<Catalyst::Controller::DBIC::API::REST>. It contains one method, create, which serializes object information and stores it in the stash, which is not the default behavior.
+.Vb 4
+\&    Following the advice in L<Catalyst::Controller::DBIC::API/EXTENDING>, this module creates an
+\&    intermediate class between your controllers and L<Catalyst::Controller::DBIC::API::REST>.
+\&    It contains one method, create, which serializes object information and stores it in the stash,
+\&    which is not the default behavior.
 .Ve
 .SH "METHODS"
 .IX Header "METHODS"
 .Sh "mk_compclass"
 .IX Subsection "mk_compclass"
-This is the meat of the helper. It writes the directory structure if it is not in place, \s-1API\s0.pm, \s-1REST\s0.pm, the controllerbase, and the result class controllers. It replaces \f(CW$helper\fR\->{} values as it goes through, rendering the files for each.
+This is the meat of the helper. It writes the directory structure if it is not in place, \s-1API\s0.pm,
+\&\s-1REST\s0.pm, the controllerbase, and the result class controllers. It replaces \f(CW$helper\fR\->{} values as
+it goes through, rendering the files for each.
 .SH "AUTHOR"
 .IX Header "AUTHOR"
 Amiri Barksdale <amiri@metalabel.com>
@@ -273,25 +289,9 @@ Amiri Barksdale <amiri@metalabel.com>
 .IX Header "LICENSE"
 This library is free software; you can redistribute it and/or modify
 it under the same terms as Perl itself.
-.SH "NAME"
-[% CLASS %] \- REST Controller for [% schema_class %]
-.SH "DESCRIPTION"
-.IX Header "DESCRIPTION"
-\&\s-1REST\s0 Methods to access the \s-1DBIC\s0 Result Class [% class_name %]
-.SH "AUTHOR"
-.IX Header "AUTHOR"
-[% author %]
-.SH "SEE ALSO"
-.IX Header "SEE ALSO"
-Catalyst::Controller::DBIC::API
-Catalyst::Controller::DBIC::API::REST
-Catalyst::Controller::DBIC::API::RPC
-.SH "LICENSE"
-.IX Header "LICENSE"
-[% license %]
 .SH "POD ERRORS"
 .IX Header "POD ERRORS"
 Hey! \fBThe above document had some coding errors, which are explained below:\fR
-.IP "Around line 131:" 4
-.IX Item "Around line 131:"
+.IP "Around line 147:" 4
+.IX Item "Around line 147:"
 =back without =over
