@@ -174,12 +174,13 @@ sub mk_compclass {
         ## Lookup table for source lookups in list_prefetch_allows
         my %name_to_source = map { $schema->source($_)->name => $_ } $schema->sources;
         
+        my $path_app = File::Spec->catdir( $FindBin::Bin, "..", "lib",
+            $helper->{app} );
+
         ## Make api base
-        my $api_file = "$FindBin::Bin/../lib/"
-                        . $helper->{app}
-                        . "/"
-                        . $helper->{type}
-                        . "/API.pm";
+        my $api_file
+            = File::Spec->catfile( $path_app, $helper->{type}, "API.pm" );
+
         (my $api_path = $api_file) =~ s/\.pm$//;
         $helper->mk_dir($api_path);
         $helper->render_file('apibase', $api_file);
@@ -187,11 +188,10 @@ sub mk_compclass {
         $helper->_mk_comptest;
 
         ## Make rest base
-        my $rest_file = "$FindBin::Bin/../lib/"
-                        . $helper->{app}
-                        . "/"
-                        . $helper->{type}
-                        . "/API/REST.pm";
+        my $rest_file
+            = File::Spec->catfile( $path_app, $helper->{type}, "API",
+            "REST.pm" );
+
         (my $rest_path = $rest_file) =~ s/\.pm$//;
         $helper->mk_dir($rest_path);
         $helper->render_file('restbase', $rest_file);
@@ -199,13 +199,10 @@ sub mk_compclass {
         $helper->_mk_comptest;
     
         ## Make controller base
-        my $base_file = "$FindBin::Bin/../lib/"
-                        . $helper->{app}
-                        . "/ControllerBase"
-                        . "/REST.pm";
-        $helper->mk_dir("$FindBin::Bin/../lib/"
-                        . $helper->{app}
-                        . "/ControllerBase" );
+        my $base_file
+            = File::Spec->catfile( $path_app, "ControllerBase", "REST.pm" );
+
+        $helper->mk_dir( File::Spec->catdir( $path_app, "ControllerBase" ) );
         $helper->render_file('controllerbase', $base_file);
         $helper->{test} = $helper->next_test('controller_base');
         $helper->_mk_comptest;
@@ -213,12 +210,8 @@ sub mk_compclass {
         ## Make result class controllers
         for my $source ($schema->sources) {
             my ($class,$result_class);
-            my $file = "$FindBin::Bin/../lib/"
-                        . $helper->{app}
-                        . "/" . $helper->{type}
-                        . "/API/REST/"
-                        . $source
-                        . ".pm";
+            my $file = File::Spec->catfile( $path_app, 
+                $helper->{type}, "API", "REST", $source . ".pm" );
             $class = $helper->{app}
                         . "::"
                         . $helper->{type}
