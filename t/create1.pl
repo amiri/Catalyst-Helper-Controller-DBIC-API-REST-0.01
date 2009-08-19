@@ -14,7 +14,6 @@ use HTTP::Request::Common;
 use JSON::Syck;
 use Catalyst::Helper;
 use File::Copy::Recursive qw /dircopy/;
-no warnings 'UNIVERSAL::isa';
 
 my @files = qw[
     t/lib/RestTest/Controller/API.pm
