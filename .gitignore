@@ -8,3 +8,4 @@ blib
 inc
 bin
 Makefile
+*.gz
