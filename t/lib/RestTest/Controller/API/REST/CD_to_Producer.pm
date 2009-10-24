@@ -2,8 +2,9 @@ package RestTest::Controller::API::REST::CD_to_Producer;
 
 use strict;
 use warnings;
-use base qw/RestTest::ControllerBase::REST/;
 use JSON::Syck;
+
+use parent qw/RestTest::ControllerBase::REST/;
 
 __PACKAGE__->config(
     action                  =>  { setup => { PathPart => 'cd_to_producer', Chained => '/api/rest/rest_base' } },
