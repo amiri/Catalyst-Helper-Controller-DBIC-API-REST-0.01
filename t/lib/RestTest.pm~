@@ -1,5 +1,4 @@
-package #hide from Pause
-	RestTest;
+package RestTest;
 
 use strict;
 use warnings;
