@@ -2,8 +2,9 @@ package RestTest::Controller::API::REST::Track;
 
 use strict;
 use warnings;
-use base qw/RestTest::ControllerBase::REST/;
 use JSON::Syck;
+
+use parent qw/RestTest::ControllerBase::REST/;
 
 __PACKAGE__->config(
     action                  =>  { setup => { PathPart => 'track', Chained => '/api/rest/rest_base' } },

@@ -1,6 +1,9 @@
 package # hide from PAUSE 
     RestTest::Schema::Result::Producer;
 
+use strict;
+use warnings;
+
 use base 'DBIx::Class::Core';
 
 __PACKAGE__->table('producer');

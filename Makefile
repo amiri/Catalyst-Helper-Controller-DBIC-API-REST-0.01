@@ -27,7 +27,7 @@
 
 # --- MakeMaker const_config section:
 
-# These definitions are from config.sh (via /home/amiri/local/lib/perl5/5.10.1/i686-linux/Config.pm).
+# These definitions are from config.sh (via /home/amiri/perl589/lib/5.8.9/i686-linux-thread-multi/Config.pm).
 # They may have been overridden via Makefile.PL or on the command line.
 AR = ar
 CC = cc
@@ -38,16 +38,16 @@ DLSRC = dl_dlopen.xs
 EXE_EXT = 
 FULL_AR = /usr/bin/ar
 LD = cc
-LDDLFLAGS = -shared -O2 -L/usr/local/lib -fstack-protector
-LDFLAGS =  -fstack-protector -L/usr/local/lib
+LDDLFLAGS = -shared -O2 -L/usr/local/lib
+LDFLAGS =  -L/usr/local/lib
 LIBC = /lib/libc-2.8.90.so
 LIB_EXT = .a
 OBJ_EXT = .o
 OSNAME = linux
-OSVERS = 2.6.27-14-generic
+OSVERS = 2.6.27-15-generic
 RANLIB = :
-SITELIBEXP = /home/amiri/local/lib/perl5/site_perl/5.10.1
-SITEARCHEXP = /home/amiri/local/lib/perl5/site_perl/5.10.1/i686-linux
+SITELIBEXP = /home/amiri/perl589/lib/site_perl/5.8.9
+SITEARCHEXP = /home/amiri/perl589/lib/site_perl/5.8.9/i686-linux-thread-multi
 SO = so
 VENDORARCHEXP = 
 VENDORLIBEXP = 
@@ -77,55 +77,55 @@ MAN3EXT = 3
 INSTALLDIRS = site
 DESTDIR = 
 PREFIX = $(SITEPREFIX)
-PERLPREFIX = /home/amiri/local
-SITEPREFIX = /home/amiri/local
+PERLPREFIX = /home/amiri/perl589
+SITEPREFIX = /home/amiri/perl589
 VENDORPREFIX = 
-INSTALLPRIVLIB = /home/amiri/local/lib/perl5/5.10.1
+INSTALLPRIVLIB = /home/amiri/perl589/lib/5.8.9
 DESTINSTALLPRIVLIB = $(DESTDIR)$(INSTALLPRIVLIB)
-INSTALLSITELIB = /home/amiri/local/lib/perl5/site_perl/5.10.1
+INSTALLSITELIB = /home/amiri/perl589/lib/site_perl/5.8.9
 DESTINSTALLSITELIB = $(DESTDIR)$(INSTALLSITELIB)
 INSTALLVENDORLIB = 
 DESTINSTALLVENDORLIB = $(DESTDIR)$(INSTALLVENDORLIB)
-INSTALLARCHLIB = /home/amiri/local/lib/perl5/5.10.1/i686-linux
+INSTALLARCHLIB = /home/amiri/perl589/lib/5.8.9/i686-linux-thread-multi
 DESTINSTALLARCHLIB = $(DESTDIR)$(INSTALLARCHLIB)
-INSTALLSITEARCH = /home/amiri/local/lib/perl5/site_perl/5.10.1/i686-linux
+INSTALLSITEARCH = /home/amiri/perl589/lib/site_perl/5.8.9/i686-linux-thread-multi
 DESTINSTALLSITEARCH = $(DESTDIR)$(INSTALLSITEARCH)
 INSTALLVENDORARCH = 
 DESTINSTALLVENDORARCH = $(DESTDIR)$(INSTALLVENDORARCH)
-INSTALLBIN = /home/amiri/local/bin
+INSTALLBIN = /home/amiri/perl589/bin
 DESTINSTALLBIN = $(DESTDIR)$(INSTALLBIN)
-INSTALLSITEBIN = /home/amiri/local/bin
+INSTALLSITEBIN = /home/amiri/perl589/bin
 DESTINSTALLSITEBIN = $(DESTDIR)$(INSTALLSITEBIN)
 INSTALLVENDORBIN = 
 DESTINSTALLVENDORBIN = $(DESTDIR)$(INSTALLVENDORBIN)
-INSTALLSCRIPT = /home/amiri/local/bin
+INSTALLSCRIPT = /home/amiri/perl589/bin
 DESTINSTALLSCRIPT = $(DESTDIR)$(INSTALLSCRIPT)
-INSTALLSITESCRIPT = /home/amiri/local/bin
+INSTALLSITESCRIPT = /home/amiri/perl589/bin
 DESTINSTALLSITESCRIPT = $(DESTDIR)$(INSTALLSITESCRIPT)
 INSTALLVENDORSCRIPT = 
 DESTINSTALLVENDORSCRIPT = $(DESTDIR)$(INSTALLVENDORSCRIPT)
-INSTALLMAN1DIR = /home/amiri/local/man/man1
+INSTALLMAN1DIR = /home/amiri/perl589/man/man1
 DESTINSTALLMAN1DIR = $(DESTDIR)$(INSTALLMAN1DIR)
-INSTALLSITEMAN1DIR = /home/amiri/local/man/man1
+INSTALLSITEMAN1DIR = /home/amiri/perl589/man/man1
 DESTINSTALLSITEMAN1DIR = $(DESTDIR)$(INSTALLSITEMAN1DIR)
 INSTALLVENDORMAN1DIR = 
 DESTINSTALLVENDORMAN1DIR = $(DESTDIR)$(INSTALLVENDORMAN1DIR)
-INSTALLMAN3DIR = /home/amiri/local/man/man3
+INSTALLMAN3DIR = /home/amiri/perl589/man/man3
 DESTINSTALLMAN3DIR = $(DESTDIR)$(INSTALLMAN3DIR)
-INSTALLSITEMAN3DIR = /home/amiri/local/man/man3
+INSTALLSITEMAN3DIR = /home/amiri/perl589/man/man3
 DESTINSTALLSITEMAN3DIR = $(DESTDIR)$(INSTALLSITEMAN3DIR)
 INSTALLVENDORMAN3DIR = 
 DESTINSTALLVENDORMAN3DIR = $(DESTDIR)$(INSTALLVENDORMAN3DIR)
 PERL_LIB =
-PERL_ARCHLIB = /home/amiri/local/lib/perl5/5.10.1/i686-linux
+PERL_ARCHLIB = /home/amiri/perl589/lib/5.8.9/i686-linux-thread-multi
 LIBPERL_A = libperl.a
 FIRST_MAKEFILE = Makefile
 MAKEFILE_OLD = Makefile.old
 MAKE_APERL_FILE = Makefile.aperl
 PERLMAINCC = $(CC)
-PERL_INC = /home/amiri/local/lib/perl5/5.10.1/i686-linux/CORE
-PERL = /home/amiri/local/bin/perl "-Iinc"
-FULLPERL = /home/amiri/local/bin/perl "-Iinc"
+PERL_INC = /home/amiri/perl589/lib/5.8.9/i686-linux-thread-multi/CORE
+PERL = /home/amiri/perl589/bin/perl "-Iinc"
+FULLPERL = /home/amiri/perl589/bin/perl "-Iinc"
 ABSPERL = $(PERL)
 PERLRUN = $(PERL)
 FULLPERLRUN = $(FULLPERL)
@@ -138,7 +138,7 @@ PERM_DIR = 755
 PERM_RW = 644
 PERM_RWX = 755
 
-MAKEMAKER   = /home/amiri/local/lib/perl5/5.10.1/ExtUtils/MakeMaker.pm
+MAKEMAKER   = /home/amiri/perl589/lib/5.8.9/ExtUtils/MakeMaker.pm
 MM_VERSION  = 6.54
 MM_REVISION = 65400
 
@@ -1220,7 +1220,7 @@ $(FIRST_MAKEFILE) : Makefile.PL $(CONFIGDEP)
 
 # --- MakeMaker makeaperl section ---
 MAP_TARGET    = perl
-FULLPERL      = /home/amiri/local/bin/perl
+FULLPERL      = /home/amiri/perl589/bin/perl
 
 $(MAP_TARGET) :: static $(MAKE_APERL_FILE)
 	$(MAKE) $(USEMAKEFILE) $(MAKE_APERL_FILE) $@
@@ -1272,7 +1272,7 @@ ppd :
 	$(NOECHO) $(ECHO) '        <REQUIRE NAME="Catalyst::Controller::DBIC::API::REST" />' >> $(DISTNAME).ppd
 	$(NOECHO) $(ECHO) '        <REQUIRE NAME="ExtUtils::MakeMaker" VERSION="6.42" />' >> $(DISTNAME).ppd
 	$(NOECHO) $(ECHO) '        <REQUIRE NAME="Test::More" />' >> $(DISTNAME).ppd
-	$(NOECHO) $(ECHO) '        <ARCHITECTURE NAME="i686-linux-5.10" />' >> $(DISTNAME).ppd
+	$(NOECHO) $(ECHO) '        <ARCHITECTURE NAME="i686-linux-thread-multi-5.8" />' >> $(DISTNAME).ppd
 	$(NOECHO) $(ECHO) '        <CODEBASE HREF="" />' >> $(DISTNAME).ppd
 	$(NOECHO) $(ECHO) '    </IMPLEMENTATION>' >> $(DISTNAME).ppd
 	$(NOECHO) $(ECHO) '</SOFTPKG>' >> $(DISTNAME).ppd

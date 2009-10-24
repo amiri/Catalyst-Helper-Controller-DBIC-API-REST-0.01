@@ -1,6 +1,9 @@
 package # hide from PAUSE 
     RestTest::Schema::Result::Track;
 
+use strict;
+use warnings;
+
 use base 'DBIx::Class::Core';
 __PACKAGE__->table('track');
 __PACKAGE__->add_columns(

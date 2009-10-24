@@ -1,13 +1,13 @@
+use 5.6.0;
+
 use strict;
 use warnings;
 
-use lib qw |t/lib|;
-use lib qw |lib|;
+use lib 't/lib';
 
-my $base = 'http://localhost';
+my $host = 'http://localhost';
 
-use RestTest;
-use DBICTest;
+require DBICTest;
 use Test::More tests => 22;
 use Test::WWW::Mechanize::Catalyst 'RestTest';
 use HTTP::Request::Common;
@@ -55,4 +55,3 @@ for my $file (@files) {
 ok(-e $file,"$file creation");
 diag("Testing $file creation");
 }
-

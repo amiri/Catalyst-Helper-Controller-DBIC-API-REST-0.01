@@ -1,13 +1,16 @@
 package Catalyst::Helper::Controller::DBIC::API::REST;
 
 use strict;
+use warnings;
+
 use FindBin;
 use File::Spec;
+use Module::Load;
 use lib "$FindBin::Bin/../lib";
 
 =head1 VERSION
 
-Version 0.04
+Version 0.05
 
 =cut
 
@@ -144,6 +147,8 @@ This is the meat of the helper. It writes the directory structure if it is not i
 REST.pm, the controllerbase, and the result class controllers. It replaces $helper->{} values as
 it goes through, rendering the files for each.
 
+=over
+
 =back
 
 =head1 AUTHOR
@@ -163,127 +168,146 @@ sub mk_compclass {
     my ( $self, $helper, $schema_class ) = @_;
     $helper->{schema_class} = $schema_class;
 
-    $helper->{script} = File::Spec->catdir( $helper->{dir}, 'script' ); 
-    $helper->{appprefix} = Catalyst::Utils::appprefix($helper->{name});
-        ## Connect to schema for class info
-        my $schema_file = "$schema_class\/Schema";
-        require "$schema_file.pm";
-        my $schema_name = "$schema_class\:\:Schema";
-        my $schema = $schema_name->connect;
+    $helper->{script} = File::Spec->catdir( $helper->{dir}, 'script' );
+    $helper->{appprefix} = Catalyst::Utils::appprefix( $helper->{name} );
+    ## Connect to schema for class info
+    my $schema_file = "$schema_class\/Schema";
+    load "$schema_file.pm";
+    my $schema_name = "$schema_class\:\:Schema";
+    my $schema      = $schema_name->connect;
 
-        ## Lookup table for source lookups in list_prefetch_allows
-        my %name_to_source = map { $schema->source($_)->name => $_ } $schema->sources;
-        
-        my $path_app = File::Spec->catdir( $FindBin::Bin, "..", "lib",
-            $helper->{app} );
+    ## Lookup table for source lookups in list_prefetch_allows
+    my %name_to_source =
+      map { $schema->source($_)->name => $_ } $schema->sources;
 
-        ## Make api base
-        my $api_file
-            = File::Spec->catfile( $path_app, $helper->{type}, "API.pm" );
+    my $path_app =
+      File::Spec->catdir( $FindBin::Bin, "..", "lib", $helper->{app} );
 
-        (my $api_path = $api_file) =~ s/\.pm$//;
-        $helper->mk_dir($api_path);
-        $helper->render_file('apibase', $api_file);
-        $helper->{test} = $helper->next_test('API');
-        $helper->_mk_comptest;
+    ## Make api base
+    my $api_file = File::Spec->catfile( $path_app, $helper->{type}, "API.pm" );
 
-        ## Make rest base
-        my $rest_file
-            = File::Spec->catfile( $path_app, $helper->{type}, "API",
-            "REST.pm" );
+    ( my $api_path = $api_file ) =~ s/\.pm$//;
+    $helper->mk_dir($api_path);
+    $helper->render_file( 'apibase', $api_file );
+    $helper->{test} = $helper->next_test('API');
+    $helper->_mk_comptest;
 
-        (my $rest_path = $rest_file) =~ s/\.pm$//;
-        $helper->mk_dir($rest_path);
-        $helper->render_file('restbase', $rest_file);
-        $helper->{test} = $helper->next_test('API_REST');
-        $helper->_mk_comptest;
-    
-        ## Make controller base
-        my $base_file
-            = File::Spec->catfile( $path_app, "ControllerBase", "REST.pm" );
+    ## Make rest base
+    my $rest_file =
+      File::Spec->catfile( $path_app, $helper->{type}, "API", "REST.pm" );
 
-        $helper->mk_dir( File::Spec->catdir( $path_app, "ControllerBase" ) );
-        $helper->render_file('controllerbase', $base_file);
-        $helper->{test} = $helper->next_test('controller_base');
-        $helper->_mk_comptest;
-        
-        ## Make result class controllers
-        for my $source ($schema->sources) {
-            my ($class,$result_class);
-            my $file = File::Spec->catfile( $path_app, 
-                $helper->{type}, "API", "REST", $source . ".pm" );
-            $class = $helper->{app}
-                        . "::"
-                        . $helper->{type}
-                        . "::API::REST::"
-                        . $source;
-            $result_class = $helper->{app}
-                        . "::Model::DB::"
-                        . $source; 
+    ( my $rest_path = $rest_file ) =~ s/\.pm$//;
+    $helper->mk_dir($rest_path);
+    $helper->render_file( 'restbase', $rest_file );
+    $helper->{test} = $helper->next_test('API_REST');
+    $helper->_mk_comptest;
 
-            ### Declare config vars
-            my @create_requires;
-            my @create_allows;
-            my @update_allows;
-            my @list_prefetch;
-            my @list_search_exposes = my @list_returns = $schema->source($source)->columns;
-            
-            ### HAIRY RELATIONSHIPS STUFF
-            my @sub_list_search_exposes = my @list_prefetch_allows = _return_has_many_list($schema->source($source)->_relationships);
-            @list_prefetch_allows = map {
-                my $ref = $_;
-                qq|[qw/$ref->[0]/], { |
-                . qq| '$ref->[0]' => [qw/|
-                . join (' ', map { $_->[0] } _return_has_many_list($schema->source($ref->[1])->_relationships))
-                . qq|/] },\n\t\t|;
-            } @list_prefetch_allows;
+    ## Make controller base
+    my $base_file =
+      File::Spec->catfile( $path_app, "ControllerBase", "REST.pm" );
 
-            @sub_list_search_exposes = map {
-                my $ref = $_;
-                qq|{ '$ref->[0]' => [qw/|
-                . join ( ' ', $schema->source($ref->[1])->columns )
-                . qq|/] },\n\t\t|;
-            } @sub_list_search_exposes;
-            ### END HAIRY RELATIONSHIP STUFF
-            
-            my @list_ordered_by = $schema->source($source)->primary_columns;
+    $helper->mk_dir( File::Spec->catdir( $path_app, "ControllerBase" ) );
+    $helper->render_file( 'controllerbase', $base_file );
+    $helper->{test} = $helper->next_test('controller_base');
+    $helper->_mk_comptest;
 
-            ### Prepare hash of column info for this class, so we can extract config
-            my %source_col_info = map { $_, $schema->source($source)->column_info($_) } $schema->source($source)->columns;
-            for my $k (sort keys %source_col_info) {
-                if ( (  !$source_col_info{$k}->{'is_auto_increment'} ) && !( $source_col_info{$k}->{'default_value'} =~ /(nextval|sequence|timestamp)/ ) ) {
-                    
-                    ### Extract create required    
-                    push @create_requires, $k if !$source_col_info{$k}->{'is_nullable'};
+    ## Make result class controllers
+    for my $source ( $schema->sources ) {
+        my ( $class, $result_class );
+        my $file =
+          File::Spec->catfile( $path_app, $helper->{type}, "API", "REST",
+            $source . ".pm" );
+        $class =
+          $helper->{app} . "::" . $helper->{type} . "::API::REST::" . $source;
+        $result_class = $helper->{app} . "::Model::DB::" . $source;
 
-                    ### Extract create_allowed
-                    push @create_allows, $k if $source_col_info{$k}->{'is_nullable'};
-                }
-                @update_allows = (@create_requires, @create_allows);
+        ### Declare config vars
+        my @create_requires;
+        my @create_allows;
+        my @update_allows;
+        my @list_prefetch;
+        my @list_search_exposes = my @list_returns =
+          $schema->source($source)->columns;
+
+        ### HAIRY RELATIONSHIPS STUFF
+        my @sub_list_search_exposes = my @list_prefetch_allows =
+          _return_has_many_list( $schema->source($source)->_relationships );
+        @list_prefetch_allows = map {
+            my $ref = $_;
+            qq|[qw/$ref->[0]/], { | 
+              . qq| '$ref->[0]' => [qw/|
+              . join(
+                ' ',
+                map { $_->[0] } _return_has_many_list(
+                    $schema->source( $ref->[1] )->_relationships
+                )
+              ) . qq|/] },\n\t\t|;
+        } @list_prefetch_allows;
+
+        @sub_list_search_exposes = map {
+            my $ref = $_;
+            qq|{ '$ref->[0]' => [qw/|
+              . join( ' ', $schema->source( $ref->[1] )->columns )
+              . qq|/] },\n\t\t|;
+        } @sub_list_search_exposes;
+        ### END HAIRY RELATIONSHIP STUFF
+
+        my @list_ordered_by = $schema->source($source)->primary_columns;
+
+        ### Prepare hash of column info for this class, so we can extract config
+        my %source_col_info =
+          map { $_, $schema->source($source)->column_info($_) }
+          $schema->source($source)->columns;
+        for my $k ( sort keys %source_col_info ) {
+            if (
+                ( !$source_col_info{$k}->{'is_auto_increment'} )
+                && !(
+                    $source_col_info{$k}->{'default_value'} =~
+                    /(nextval|sequence|timestamp)/
+                )
+              )
+            {
+
+                ### Extract create required
+                push @create_requires, $k
+                  if !$source_col_info{$k}->{'is_nullable'};
+
+                ### Extract create_allowed
+                push @create_allows, $k
+                  if $source_col_info{$k}->{'is_nullable'};
             }
-
-            $helper->{class} = $class;
-            $helper->{result_class} = $source;
-            $helper->{class_name} = $schema->source_registrations->{$source}->name;
-            $helper->{file} = $file;
-            $helper->{create_requires} = join(' ', @create_requires);
-            $helper->{create_allows} = join(' ', @create_allows);
-            $helper->{list_returns} = join(' ', @list_returns);
-            $helper->{list_search_exposes} = join(' ', @list_search_exposes);
-            $helper->{sub_list_search_exposes} = join('', @sub_list_search_exposes);
-            $helper->{update_allows} = join(' ', @update_allows);
-            $helper->{list_prefetch_allows} = join('', @list_prefetch_allows) if scalar @list_prefetch_allows > 0;
-            $helper->{list_prefetch} = join(', ', map { qq|'$_->[0]'|  } @list_prefetch) if scalar @list_prefetch > 0; 
-            $helper->{list_ordered_by} = join(' ', @list_ordered_by);
-            $helper->render_file( 'compclass', $file );
-            $helper->{test} = $helper->next_test($source);
-            $helper->_mk_comptest;
+            else { }
+            @update_allows = ( @create_requires, @create_allows );
         }
+
+        $helper->{class}        = $class;
+        $helper->{result_class} = $source;
+        $helper->{class_name} = $schema->source_registrations->{$source}->name;
+        $helper->{file}       = $file;
+        $helper->{create_requires}     = join( ' ', @create_requires );
+        $helper->{create_allows}       = join( ' ', @create_allows );
+        $helper->{list_returns}        = join( ' ', @list_returns );
+        $helper->{list_search_exposes} = join( ' ', @list_search_exposes );
+        $helper->{sub_list_search_exposes} =
+          join( '', @sub_list_search_exposes );
+        $helper->{update_allows}        = join( ' ', @update_allows );
+        $helper->{list_prefetch_allows} = join( '',  @list_prefetch_allows )
+          if scalar @list_prefetch_allows > 0;
+        $helper->{list_prefetch} =
+          join( ', ', map { qq|'$_->[0]'| } @list_prefetch )
+          if scalar @list_prefetch > 0;
+        $helper->{list_ordered_by} = join( ' ', @list_ordered_by );
+        $helper->render_file( 'compclass', $file );
+        $helper->{test} = $helper->next_test($source);
+        $helper->_mk_comptest;
+    }
 }
 
 sub _return_has_many_list {
     my ($relationships) = @_;
-    return grep { $relationships->{$_->[0]}->{attrs}->{accessor} =~ /multi/ } map { [$_, $relationships->{$_}->{source} ] } sort keys %$relationships;
+    return
+      grep { $relationships->{ $_->[0] }->{attrs}->{accessor} =~ /multi/ }
+      map { [ $_, $relationships->{$_}->{source} ] } sort keys %$relationships;
 }
 
 1;
@@ -297,7 +321,8 @@ package [% app %]::Controller::API;
 
 use strict;
 use warnings;
-use base qw/Catalyst::Controller/;
+
+use parent qw/Catalyst::Controller/;
 
 sub api_base : Chained('/') PathPart('api') CaptureArgs(0) {
     my ( $self, $c ) = @_;
@@ -311,7 +336,7 @@ package [% app %]::Controller::API::REST;
 use strict;
 use warnings;
 
-use base qw/Catalyst::Controller/;
+use parent qw/Catalyst::Controller/;
 
 sub rest_base : Chained('/api/api_base') PathPart('rest') CaptureArgs(0) {
     my ($self, $c) = @_;
@@ -323,7 +348,8 @@ package [% app %]::ControllerBase::REST;
 
 use strict;
 use warnings;
-use base qw/Catalyst::Controller::DBIC::API::REST/;
+
+use parent qw/Catalyst::Controller::DBIC::API::REST/;
 
 sub create :Private {
 my ($self, $c) = @_;
@@ -339,8 +365,9 @@ package [% class %];
 
 use strict;
 use warnings;
-use base qw/[% app %]::ControllerBase::REST/;
 use JSON::Syck;
+
+use parent qw/[% app %]::ControllerBase::REST/;
 
 __PACKAGE__->config(
     action                  =>  { setup => { PathPart => '[% class_name  %]', Chained => '/api/rest/rest_base' } },

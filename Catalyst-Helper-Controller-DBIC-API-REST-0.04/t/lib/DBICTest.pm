@@ -3,7 +3,6 @@ package # hide from PAUSE
 
 use strict;
 use warnings;
-use RestTest::Schema;
 
 =head1 NAME
 
@@ -95,10 +94,10 @@ sub deploy_schema {
     my $schema = shift;
 
     my $file = shift || $self->get_ddl_file($schema);
-    open IN, $file;
+    open (my $IN, '<', $file) or die $!;
     my $sql;
-    { local $/ = undef; $sql = <IN>; }
-    close IN;
+    { local $/ = undef; $sql = <$IN>; }
+    close $IN;
     ($schema->storage->dbh->do($_) || print "Error on SQL: $_\n") for split(/;\n/, $sql);
 }
  

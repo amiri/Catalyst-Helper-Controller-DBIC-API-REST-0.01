@@ -5,7 +5,7 @@ use warnings;
 
 use lib 't/lib';
 
-my $base = 'http://localhost';
+my $host = 'http://localhost';
 my $content_type = [ 'Content-Type', 'application/x-www-form-urlencoded' ];
 
 use RestTest;
@@ -21,12 +21,12 @@ ok(my $schema = DBICTest->init_schema(), 'got schema');
 my $track = $schema->resultset('Track')->first;
 my %original_cols = $track->get_columns;
 
-my $track_update_url = "$base/api/rest/track/" . $track->id;
+my $track_update_url = "$host/api/rest/track/" . $track->id;
 
 # test invalid track id caught
 {
 	foreach my $wrong_id ('sdsdsdsd', 3434234) {
-		my $incorrect_url = "$base/api/rest/track/" . $wrong_id;
+		my $incorrect_url = "$host/api/rest/track/" . $wrong_id;
 		my $test_data = JSON::Syck::Dump({ title => 'value' });
 		my $req = POST( $incorrect_url, Content => $test_data );
 		$req->content_type('text/x-json');

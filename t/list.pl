@@ -5,7 +5,7 @@ use warnings;
 
 use lib 't/lib';
 
-my $base = 'http://localhost';
+my $host = 'http://localhost';
 
 use RestTest;
 use DBICTest;
@@ -20,8 +20,8 @@ use JSON::Syck;
 my $mech = Test::WWW::Mechanize::Catalyst->new;
 ok(my $schema = DBICTest->init_schema(), 'got schema');
 
-my $artist_list_url = "$base/api/rest/artist";
-my $producer_list_url = "$base/api/rest/producer";
+my $artist_list_url = "$host/api/rest/artist";
+my $producer_list_url = "$host/api/rest/producer";
 
 # test open request
 {

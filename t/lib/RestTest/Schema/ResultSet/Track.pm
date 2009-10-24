@@ -1,7 +1,10 @@
 package    # hide from PAUSE
     RestTest::Schema::ResultSet::Track;
 
-use base 'RestTest::Schema::ResultSet';
+use strict;
+use warnings;
+
+use parent 'RestTest::Schema::ResultSet';
 
 sub search {
     my $self = shift;

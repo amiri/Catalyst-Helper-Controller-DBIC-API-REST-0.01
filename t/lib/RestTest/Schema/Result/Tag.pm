@@ -1,6 +1,9 @@
 package # hide from PAUSE 
     RestTest::Schema::Result::Tag;
 
+use strict;
+use warnings;
+
 use base qw/DBIx::Class::Core/;
 
 __PACKAGE__->table('tags');

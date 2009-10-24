@@ -5,7 +5,7 @@ use warnings;
 
 use lib 't/lib';
 
-my $base = 'http://localhost';
+my $host = 'http://localhost';
 my $content_type = [ 'Content-Type', 'application/x-www-form-urlencoded' ];
 
 use RestTest;
@@ -21,7 +21,7 @@ ok(my $schema = DBICTest->init_schema(), 'got schema');
 my $track = $schema->resultset('Track')->first;
 my %original_cols = $track->get_columns;
 
-my $track_delete_url = "$base/api/rest/track/" . $track->id;
+my $track_delete_url = "$host/api/rest/track/" . $track->id;
 
 {
   my $req = HTTP::Request->new( DELETE => $track_delete_url );

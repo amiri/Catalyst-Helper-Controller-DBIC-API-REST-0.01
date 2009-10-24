@@ -20,8 +20,10 @@ no_index:
     - t
     - xt
 requires:
-  Catalyst::Controller::DBIC::API: 1.003000
+  Catalyst::Controller::DBIC::API: 0
   Catalyst::Controller::DBIC::API::REST: 0
+  Catalyst::Helper: 0
+  Module::Load: 0
 resources:
   license: http://dev.perl.org/licenses/
 version: 0.04

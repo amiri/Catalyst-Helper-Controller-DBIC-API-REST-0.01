@@ -1,5 +1,5 @@
 VERSION
-    Version 0.04
+    Version 0.05
 
 NAME
     Catalyst::Helper::Controller::DBIC::API::REST
@@ -125,11 +125,4 @@ SEE ALSO
 LICENSE
     This library is free software; you can redistribute it and/or modify it
     under the same terms as Perl itself.
-
-POD ERRORS
-    Hey! The above document had some coding errors, which are explained
-    below:
-
-    Around line 147:
-        =back without =over
 

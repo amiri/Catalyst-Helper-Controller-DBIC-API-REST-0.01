@@ -1,9 +1,10 @@
 package # hide from PAUSE
     RestTest::Schema;
 
-use base qw/DBIx::Class::Schema/;
+use strict;
+use warnings;
 
-no warnings qw/qw/;
+use parent qw/DBIx::Class::Schema/;
 
 __PACKAGE__->load_namespaces;
 

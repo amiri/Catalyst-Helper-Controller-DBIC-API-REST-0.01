@@ -1,6 +1,9 @@
 package # hide from PAUSE 
     RestTest::Schema::Result::CD_to_Producer;
 
+use strict;
+use warnings;
+
 use base 'DBIx::Class::Core';
 
 __PACKAGE__->table('cd_to_producer');
