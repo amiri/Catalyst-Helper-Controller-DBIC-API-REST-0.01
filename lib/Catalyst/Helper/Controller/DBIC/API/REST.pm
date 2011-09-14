@@ -24,17 +24,18 @@ Catalyst::Helper::Controller::DBIC::API::REST
 
 =head1 SYNOPSIS
 
-    $ catalyst.pl myapp
-    $ cd myapp
-    $ script/myapp_create.pl controller API::REST DBIC::API::REST myapp
+    $ catalyst.pl MyApp
+    $ cd MyApp
+    $ script/myapp_create.pl controller API::REST DBIC::API::REST \
+        MyApp::Model::DB MyApp::Schema
 
     ...
 
-    package myapp::Controller::API::REST::Producer;
+    package MyApp::Controller::API::REST::Producer;
 
     use strict;
     use warnings;
-    use base qw/myapp::ControllerBase::REST/;
+    use base qw/MyApp::ControllerBase::REST/;
     use JSON::Syck;
 
     __PACKAGE__->config(
@@ -64,15 +65,14 @@ Catalyst::Helper::Controller::DBIC::API::REST
 =head1 DESCRIPTION
 
   This creates REST controllers according to the specifications at L<Catalyst::Controller::DBIC::API>
-  and L<Catalyst::Controller::DBIC::API::REST> for all the classes in your Catalyst app. Your
-  application must access your model at myapp::Model::DB.
+  and L<Catalyst::Controller::DBIC::API::REST> for all the classes in your Catalyst app.
 
   It creates the following files:
     
-    myapp/lib/myapp/Controller/API.pm
-    myapp/lib/myapp/Controller/API/REST.pm
-    myapp/lib/myapp/Controller/API/REST/*   (this is where the individual class controllers are located)
-    myapp/lib/myapp/ControllerBase/REST.pm
+    MyApp/lib/MyApp/Controller/API.pm
+    MyApp/lib/MyApp/Controller/API/REST.pm
+    MyApp/lib/MyApp/Controller/API/REST/*   (this is where the individual class controllers are located)
+    MyApp/lib/MyApp/ControllerBase/REST.pm
 
 =head2 CONFIGURATION
 
