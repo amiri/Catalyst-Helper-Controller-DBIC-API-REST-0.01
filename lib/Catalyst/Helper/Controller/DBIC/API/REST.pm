@@ -1,11 +1,13 @@
 package Catalyst::Helper::Controller::DBIC::API::REST;
 
+use namespace::autoclean;
+
 use strict;
 use warnings;
 
 use FindBin;
 use File::Spec;
-use Module::Load;
+
 use lib "$FindBin::Bin/../lib";
 
 =head1 VERSION
@@ -165,23 +167,26 @@ it under the same terms as Perl itself.
 =cut
 
 sub mk_compclass {
-    my ( $self, $helper, $schema_class ) = @_;
-    $helper->{schema_class} = $schema_class;
+    my ( $self, $helper, $model, $schema_class ) = @_;
+
+    $schema_class ||= $helper->{app} . '::Schema';
+    $model        ||= $helper->{app} . '::Model::DB';
+
+    (my $model_base = $model) =~ s/.*::Model:://;
 
     $helper->{script} = File::Spec->catdir( $helper->{dir}, 'script' );
     $helper->{appprefix} = Catalyst::Utils::appprefix( $helper->{name} );
+
     ## Connect to schema for class info
-    my $schema_file = "$schema_class\/Schema";
-    load "$schema_file.pm";
-    my $schema_name = "$schema_class\:\:Schema";
-    my $schema      = $schema_name->connect;
+    Class::MOP::load_class($schema_class);
+    my $schema      = $schema_class->connect;
 
     ## Lookup table for source lookups in list_prefetch_allows
     my %name_to_source =
       map { $schema->source($_)->name => $_ } $schema->sources;
 
     my $path_app =
-      File::Spec->catdir( $FindBin::Bin, "..", "lib", $helper->{app} );
+      File::Spec->catdir( $FindBin::Bin, "..", "lib", split(/::/, $helper->{app}) );
 
     ## Make api base
     my $api_file = File::Spec->catfile( $path_app, $helper->{type}, "API.pm" );
@@ -219,7 +224,8 @@ sub mk_compclass {
             $source . ".pm" );
         $class =
           $helper->{app} . "::" . $helper->{type} . "::API::REST::" . $source;
-        $result_class = $helper->{app} . "::Model::DB::" . $source;
+        #$result_class = $helper->{app} . "::Model::DB::" . $source;
+        $result_class = $model . '::' . $source;
 
         ### Declare config vars
         my @create_requires;
@@ -282,7 +288,7 @@ sub mk_compclass {
         }
 
         $helper->{class}        = $class;
-        $helper->{result_class} = $source;
+        $helper->{result_class} = $model_base . '::' . $source;
         $helper->{class_name} = $schema->source_registrations->{$source}->name;
         $helper->{file}       = $file;
         $helper->{create_requires}     = join( ' ', @create_requires );
@@ -373,7 +379,7 @@ use parent qw/[% app %]::ControllerBase::REST/;
 __PACKAGE__->config(
     action                  =>  { setup => { PathPart => '[% class_name  %]', Chained => '/api/rest/rest_base' } },
                                 # define parent chain action and partpath
-    class                   =>  'DB::[% result_class %]', # DBIC result class
+    class                   =>  '[% result_class %]', # DBIC result class
     create_requires         =>  [qw/[% create_requires %]/], # columns required to create
     create_allows           =>  [qw/[% create_allows %]/], # additional non-required columns that create allows
     update_allows           =>  [qw/[% update_allows %]/], # columns that update allows
