@@ -27,7 +27,7 @@ Catalyst::Helper::Controller::DBIC::API::REST
     $ catalyst.pl MyApp
     $ cd MyApp
     $ script/myapp_create.pl controller API::REST DBIC::API::REST \
-        MyApp::Model::DB MyApp::Schema
+        MyApp::Schema MyApp::Model::DB
 
     ...
 
@@ -167,12 +167,12 @@ it under the same terms as Perl itself.
 =cut
 
 sub mk_compclass {
-    my ( $self, $helper, $model, $schema_class ) = @_;
+    my ( $self, $helper, $schema_class, $model ) = @_;
 
     $schema_class ||= $helper->{app} . '::Schema';
     $model        ||= $helper->{app} . '::Model::DB';
 
-    (my $model_base = $model) =~ s/.*::Model:://;
+    (my $model_base = $model) =~ s/^.*::Model:://;
 
     $helper->{script} = File::Spec->catdir( $helper->{dir}, 'script' );
     $helper->{appprefix} = Catalyst::Utils::appprefix( $helper->{name} );
@@ -225,7 +225,7 @@ sub mk_compclass {
         $class =
           $helper->{app} . "::" . $helper->{type} . "::API::REST::" . $source;
         #$result_class = $helper->{app} . "::Model::DB::" . $source;
-        $result_class = $model . '::' . $source;
+        $result_class = $model_base . '::' . $source;
 
         ### Declare config vars
         my @create_requires;

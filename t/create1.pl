@@ -47,7 +47,6 @@ ok($helper,'Helper creation');
 diag("Helper created");
 
 ok($helper->mk_component(   'RestTest', "controller", "API::REST", "DBIC::API::REST",
-                            "RestTest",
                             ), "Controller file creation" );
 
 ok(dircopy("lib/RestTest/Controller","t/lib/RestTest/Controller"), "Move files to proper location");
