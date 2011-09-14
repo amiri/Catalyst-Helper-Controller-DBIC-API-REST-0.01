@@ -14,7 +14,7 @@ Version 0.06
 
 =cut
 
-our $VERSION = '0.06';
+our $VERSION = '0.07';
 
 =head1 NAME
 
@@ -259,6 +259,7 @@ sub mk_compclass {
           map { $_, $schema->source($source)->column_info($_) }
           $schema->source($source)->columns;
         for my $k ( sort keys %source_col_info ) {
+            no warnings qw/uninitialized/;
             if (
                 ( !$source_col_info{$k}->{'is_auto_increment'} )
                 && !(

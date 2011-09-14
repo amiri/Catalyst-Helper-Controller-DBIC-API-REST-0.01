@@ -1,4 +1,5 @@
-package RestTest::Controller::API::REST::Tag;
+package #hide from Pause
+	RestTest::Controller::API::REST::Tag;
 
 use strict;
 use warnings;
