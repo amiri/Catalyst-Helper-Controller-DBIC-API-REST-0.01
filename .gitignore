@@ -9,3 +9,9 @@ inc
 bin
 Makefile
 *.gz
+t/var/*
+t/controller_*.t
+t/lib/RestTest/Controller*
+pm_to_blib
+META.*
+MYMETA.*

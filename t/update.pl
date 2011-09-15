@@ -3,6 +3,7 @@ use 5.6.0;
 use strict;
 use warnings;
 
+use lib 'lib';
 use lib 't/lib';
 
 my $host = 'http://localhost';
@@ -19,6 +20,7 @@ my $mech = Test::WWW::Mechanize::Catalyst->new;
 ok(my $schema = DBICTest->init_schema(), 'got schema');
 
 my $track = $schema->resultset('Track')->first;
+
 my %original_cols = $track->get_columns;
 
 my $track_update_url = "$host/api/rest/track/" . $track->id;
@@ -33,9 +35,8 @@ my $track_update_url = "$host/api/rest/track/" . $track->id;
 		$mech->request($req);
 
 		cmp_ok( $mech->status, '==', 400, 'Attempt with invalid track id caught' );
-		
 		my $response = JSON::Syck::Load( $mech->content);
-		is_deeply( $response->{messages}, ['Invalid id'], 'correct message returned' );
+		like( @{$response->{messages}}[0], qr/No object found for id/, 'correct message returned' );
 		
 		$track->discard_changes;
 		is_deeply({ $track->get_columns }, \%original_cols, 'no update occurred');
