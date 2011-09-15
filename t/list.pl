@@ -3,6 +3,7 @@ use 5.6.0;
 use strict;
 use warnings;
 
+use lib 'lib';
 use lib 't/lib';
 
 my $host = 'http://localhost';

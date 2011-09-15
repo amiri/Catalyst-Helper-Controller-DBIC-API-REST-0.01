@@ -3,12 +3,13 @@ use 5.6.0;
 use strict;
 use warnings;
 
+use lib 'lib';
 use lib 't/lib';
 
 my $host = 'http://127.0.0.1';
 
 require DBICTest;
-use Test::More tests => 8;
+use Test::More tests => 7;
 use Test::WWW::Mechanize::Catalyst 'RestTest';
 use HTTP::Request::Common;
 use JSON::Syck;
@@ -71,10 +72,4 @@ my $producer_create_url = "$host/api/rest/producer";
       $schema->resultset('Producer')->find( { name => 'king luke' } );
     ok( $new_obj, 'record created with specified name' );
 
-    my $response = JSON::Syck::Load( $mech->content );
-    is_deeply(
-        $response->{new_object},
-        { $new_obj->get_columns },
-        'json for new producer returned'
-    );
 }

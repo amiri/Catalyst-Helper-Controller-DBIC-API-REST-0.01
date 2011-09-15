@@ -5,7 +5,7 @@ all_from 'lib/Catalyst/Helper/Controller/DBIC/API/REST.pm';
 
 requires 'Catalyst::Controller::DBIC::API';
 requires 'Catalyst::Controller::DBIC::API::REST';
-requires 'Module::Load';
+requires 'namespace::autoclean';
 requires 'parent';
 requires 'Catalyst::Helper';
 
