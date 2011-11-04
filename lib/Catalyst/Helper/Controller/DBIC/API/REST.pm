@@ -10,13 +10,9 @@ use File::Spec;
 
 use lib "$FindBin::Bin/../lib";
 
-=head1 VERSION
-
-Version 0.06
-
-=cut
-
-our $VERSION = '0.07';
+BEGIN {
+    # VERSION
+}
 
 =head1 NAME
 
@@ -36,43 +32,50 @@ Catalyst::Helper::Controller::DBIC::API::REST
     use strict;
     use warnings;
     use base qw/MyApp::ControllerBase::REST/;
-    use JSON::Syck;
+    use JSON::XS;
 
     __PACKAGE__->config(
-        action                  =>  { setup => { PathPart => 'producer', Chained => '/api/rest/rest_base' } },
-                                    # define parent chain action and partpath
-        class                   =>  'DB::Producer', # DBIC result class
-        create_requires         =>  [qw/name/], # columns required to create
-        create_allows           =>  [qw//], # additional non-required columns that create allows
-        update_allows           =>  [qw/name/], # columns that update allows
-        list_returns            =>  [qw/producerid name/], # columns that list returns
+        action             =>  { setup => {
+                                    PathPart => 'producer',
+                                    Chained => '/api/rest/rest_base' }
+                                }, # define parent chain action and partpath
+        class              =>  'DB::Producer',        # DBIC result class
+        create_requires    =>  [qw/name/],            # columns required
+                                                      # to create
+        create_allows      =>  [qw//],                # additional non-required
+                                                      # columns that
+                                                      # create allows
+        update_allows      =>  [qw/name/],            # columns that
+                                                      # update allows
+        list_returns       =>  [qw/producerid name/], # columns that
+                                                      # list returns
 
-
-        list_prefetch_allows    =>  [ # every possible prefetch param allowed
-            [qw/cd_to_producer/], {  'cd_to_producer' => [qw//] },
-            [qw/tags/], {  'tags' => [qw//] },
-            [qw/tracks/], {  'tracks' => [qw//] },
-            
+        list_prefetch_allows => [ # every possible prefetch param allowed
+            [qw/cd_to_producer/], { 'cd_to_producer' => [qw//] },
+            [qw/tags/],           { 'tags'           => [qw//] },
+            [qw/tracks/],         { 'tracks'         => [qw//] },
         ],
 
-        list_ordered_by         => [qw/producerid/], # order of generated list
-        list_search_exposes     => [
-            qw/producerid name/,
-            
-        ], # columns that can be searched on via list
+        list_ordered_by         => [ qw/producerid/ ],
+                                    # order of generated list
+        list_search_exposes     => [ qw/producerid name/ ],
+                                    # columns that can be searched on via list
     );
 
 =head1 DESCRIPTION
 
-  This creates REST controllers according to the specifications at L<Catalyst::Controller::DBIC::API>
-  and L<Catalyst::Controller::DBIC::API::REST> for all the classes in your Catalyst app.
+  This creates REST controllers according to the specifications at
+  L<Catalyst::Controller::DBIC::API> and L<Catalyst::Controller::DBIC::API::REST>
+  for all the classes in your Catalyst app.
 
   It creates the following files:
     
     MyApp/lib/MyApp/Controller/API.pm
     MyApp/lib/MyApp/Controller/API/REST.pm
-    MyApp/lib/MyApp/Controller/API/REST/*   (this is where the individual class controllers are located)
+    MyApp/lib/MyApp/Controller/API/REST/*
     MyApp/lib/MyApp/ControllerBase/REST.pm
+
+  Individual class controllers are under MyApp/lib/MyApp/Controller/API/REST/*.
 
 =head2 CONFIGURATION
 
@@ -84,13 +87,15 @@ Catalyst::Helper::Controller::DBIC::API::REST
     
 =head2 create_requires
 
-    All non-nullable columns that are (1) not autoincrementing, (2) don't have a default value,
-    are neither (3) nextvals, (4) sequences, nor (5) timestamps.    
+    All non-nullable columns that are (1) not autoincrementing,
+    (2) don't have a default value, are neither (3) nextvals,
+    (4) sequences, nor (5) timestamps.    
 
 =head2 create_allows
 
-    All nullable columns that are (1) not autoincrementing, (2) don't have a default value,
-    are neither (3) nextvals, (4) sequences, nor (5) timestamps.
+    All nullable columns that are (1) not autoincrementing,
+    (2) don't have a default value, are neither (3) nextvals,
+    (4) sequences, nor (5) timestamps.
 
 =head2 update_allows
 
@@ -106,15 +111,17 @@ Catalyst::Helper::Controller::DBIC::API::REST
 
 =head2 list_prefetch_allows
 
-    (1) An arrayref consisting of the name of each of the class's has_many relationships, accompanied
-    by (2) a hashref keyed on the name of that relationship, whose values are the names of its
-    has_many's, e.g., in the "Producer" controller above, a Producer has many cd_to_producers,
-    many tags, and many tracks. None of those classes have any has_many's:
+    (1) An arrayref consisting of the name of each of the class's
+    has_many relationships, accompanied by (2) a hashref keyed on
+    the name of that relationship, whose values are the names of
+    its has_many's, e.g., in the "Producer" controller above, a
+    Producer has many cd_to_producers, many tags, and many tracks.
+    None of those classes have any has_many's:
 
     list_prefetch_allows    =>  [
-        [qw/cd_to_producer/], {  'cd_to_producer' => [qw//] },
-        [qw/tags/], {  'tags' => [qw//] },
-        [qw/tracks/], {  'tracks' => [qw//] },
+        [qw/cd_to_producer/], { 'cd_to_producer'  => [qw//] },
+        [qw/tags/],           { 'tags'            => [qw//] },
+        [qw/tracks/],         { 'tracks'          => [qw//] },
     ],
 
 =head2 list_ordered_by
@@ -123,31 +130,34 @@ Catalyst::Helper::Controller::DBIC::API::REST
 
 =head2 list_search_exposes
     
-    (1) An arrayref consisting of the name of each column in the class, and (2) a hashref keyed
-    on the name of each of the class's has many relationships, the values of which are all the
-    columns in the corresponding class, e.g., 
+    (1) An arrayref consisting of the name of each column in the class,
+    and (2) a hashref keyed on the name of each of the class's has many
+    relationships, the values of which are all the columns in the
+    corresponding class, e.g., 
 
-    list_search_exposes     => [
+    list_search_exposes => [
         qw/cdid artist title year/,
         { 'cd_to_producer' => [qw/cd producer/] },
-        { 'tags' => [qw/tagid cd tag/] },
-        { 'tracks' => [qw/trackid cd position title last_updated_on/] },
-    ], # columns that can be searched on via list
+        { 'tags'           => [qw/tagid cd tag/] },
+        { 'tracks'         => [qw/trackid cd position title last_updated_on/] },
+    ],    # columns that can be searched on via list
 
 =head1 CONTROLLERBASE
 
-    Following the advice in L<Catalyst::Controller::DBIC::API/EXTENDING>, this module creates an
-    intermediate class between your controllers and L<Catalyst::Controller::DBIC::API::REST>.
-    It contains one method, create, which serializes object information and stores it in the stash,
-    which is not the default behavior.
+    Following the advice in L<Catalyst::Controller::DBIC::API/EXTENDING>, this
+    module creates an intermediate class between your controllers and
+    L<Catalyst::Controller::DBIC::API::REST>.  It contains one method, create,
+    which serializes object information and stores it in the stash, which is
+    not the default behavior.
 
 =head1 METHODS
 
 =head2 mk_compclass
 
-This is the meat of the helper. It writes the directory structure if it is not in place, API.pm,
-REST.pm, the controllerbase, and the result class controllers. It replaces $helper->{} values as
-it goes through, rendering the files for each.
+    This is the meat of the helper. It writes the directory structure if it is
+    not in place, API.pm, REST.pm, the controllerbase, and the result class
+    controllers. It replaces $helper->{} values as it goes through, rendering
+    the files for each.
 
 =over
 
@@ -155,9 +165,19 @@ it goes through, rendering the files for each.
 
 =head1 AUTHOR
 
-Amiri Barksdale E<lt>amiri@metalabel.comE<gt>
+Amiri Barksdale E<lt>amiri@arisdottle.netE<gt>
+
+=head1 CONTRIBUTORS
+
+Matt S. Trout (mst) E<lt>mst@shadowcat.co.ukE<gt>
+
+Tomas Doran (t0m) E<lt>bobtfish@bobtfish.netE<gt>
 
 =head1 SEE ALSO
+
+L<Catalyst::Controller::DBIC::API>
+L<Catalyst::Controller::DBIC::API::REST>
+L<Catalyst::Controller::DBIC::API::RPC>
 
 =head1 LICENSE
 
@@ -372,7 +392,7 @@ package [% class %];
 
 use strict;
 use warnings;
-use JSON::Syck;
+use JSON::XS;
 
 use parent qw/[% app %]::ControllerBase::REST/;
 

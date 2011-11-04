@@ -3,18 +3,15 @@ use 5.6.0;
 use strict;
 use warnings;
 
-use lib 'lib';
 use lib 't/lib';
 
 my $host = 'http://localhost';
 
 require DBICTest;
-use Test::More tests => 22;
-use Test::WWW::Mechanize::Catalyst 'RestTest';
-use HTTP::Request::Common;
-use JSON::Syck;
+use Test::More tests => 32;
 use Catalyst::Helper;
 use File::Copy::Recursive qw /dircopy/;
+use File::Path qw/remove_tree/;
 
 my @files = qw[
     t/lib/RestTest/Controller/API.pm
@@ -35,23 +32,35 @@ my @files = qw[
     t/controller_Producer.t
     t/controller_Tag.t
     t/controller_Track.t
-    ];
+];
 
 for my $file (@files) {
     unlink $file;
 }
 
-my $helper = Catalyst::Helper->new({ '.newfiles' => 1 });
+my $helper = Catalyst::Helper->new( { '.newfiles' => 1 } );
 
-ok($helper,'Helper creation');
-diag("Helper created");
+ok( $helper, 'Helper creation' );
 
-ok($helper->mk_component(   'RestTest', "controller", "API::REST", "DBIC::API::REST",
-                            ), "Controller file creation" );
+ok( $helper->mk_component(
+        'RestTest', "controller", "API::REST", "DBIC::API::REST",
+    ),
+    "Controller file creation"
+);
 
-ok(dircopy("lib/RestTest/Controller","t/lib/RestTest/Controller"), "Move files to proper location");
-ok(dircopy("lib/RestTest/ControllerBase","t/lib/RestTest/ControllerBase"), "Move files to proper location");
+ok( dircopy( "lib/RestTest/Controller", "t/lib/RestTest/Controller" ),
+    "Move files to proper location" );
+ok( dircopy( "lib/RestTest/ControllerBase", "t/lib/RestTest/ControllerBase" ),
+    "Move files to proper location"
+);
+
+ok(remove_tree("lib/RestTest"), "Remove directory from live lib directory");
+
 for my $file (@files) {
-ok(-e $file,"$file creation");
-diag("Testing $file creation");
+    ok( -e $file, "$file creation" );
+}
+
+for my $file (grep { $_ =~ /\.t$/ } @files) {
+#for my $file (@files) {
+    ok( unlink($file), "Test test file $file deletion" );
 }

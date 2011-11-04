@@ -1,4 +1,5 @@
-package RestTest::Controller::Root;
+package # Hide from PAUSE
+    RestTest::Controller::Root;
 
 use strict;
 use warnings;
