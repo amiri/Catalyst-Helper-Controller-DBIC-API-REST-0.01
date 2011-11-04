@@ -11,6 +11,7 @@ use File::Spec;
 use lib "$FindBin::Bin/../lib";
 
 BEGIN {
+
     # VERSION
 }
 
@@ -24,6 +25,7 @@ Catalyst::Helper::Controller::DBIC::API::REST
     $ cd MyApp
     $ script/myapp_create.pl controller API::REST DBIC::API::REST \
         MyApp::Schema MyApp::Model::DB
+
 
     ...
 
@@ -69,7 +71,7 @@ Catalyst::Helper::Controller::DBIC::API::REST
   for all the classes in your Catalyst app.
 
   It creates the following files:
-    
+
     MyApp/lib/MyApp/Controller/API.pm
     MyApp/lib/MyApp/Controller/API/REST.pm
     MyApp/lib/MyApp/Controller/API/REST/*
@@ -81,15 +83,15 @@ Catalyst::Helper::Controller::DBIC::API::REST
 
     The idea is to make configuration as painless and as automatic as possible, so most
     of the work has been done for you.
-    
+
     There are 8 __PACKAGE__->config(...) options for L<Catalyst::Controller::DBIC::API/CONFIGURATION>.
     Here are the defaults.
-    
+
 =head2 create_requires
 
     All non-nullable columns that are (1) not autoincrementing,
     (2) don't have a default value, are neither (3) nextvals,
-    (4) sequences, nor (5) timestamps.    
+    (4) sequences, nor (5) timestamps.
 
 =head2 create_allows
 
@@ -99,7 +101,7 @@ Catalyst::Helper::Controller::DBIC::API::REST
 
 =head2 update_allows
 
-    The union of create_requires and create_allows.    
+    The union of create_requires and create_allows.
 
 =head2 list_returns
 
@@ -129,11 +131,11 @@ Catalyst::Helper::Controller::DBIC::API::REST
     The primary key.
 
 =head2 list_search_exposes
-    
+
     (1) An arrayref consisting of the name of each column in the class,
     and (2) a hashref keyed on the name of each of the class's has many
     relationships, the values of which are all the columns in the
-    corresponding class, e.g., 
+    corresponding class, e.g.,
 
     list_search_exposes => [
         qw/cdid artist title year/,
@@ -169,9 +171,9 @@ Amiri Barksdale E<lt>amiri@arisdottle.netE<gt>
 
 =head1 CONTRIBUTORS
 
-Matt S. Trout (mst) E<lt>mst@shadowcat.co.ukE<gt>
+Franck Cuny (lumberjaph) <franck@lumberjaph.net>
 
-Tomas Doran (t0m) E<lt>bobtfish@bobtfish.netE<gt>
+Chris Weyl (RsrchBoy) <cweyl@alumni.drew.edu>
 
 =head1 SEE ALSO
 
@@ -192,24 +194,21 @@ sub mk_compclass {
     $schema_class ||= $helper->{app} . '::Schema';
     $model        ||= $helper->{app} . '::Model::DB';
 
-    (my $model_base = $model) =~ s/^.*::Model:://;
+    ( my $model_base = $model ) =~ s/^.*::Model:://;
 
     $helper->{script} = File::Spec->catdir( $helper->{dir}, 'script' );
     $helper->{appprefix} = Catalyst::Utils::appprefix( $helper->{name} );
 
     ## Connect to schema for class info
     Class::MOP::load_class($schema_class);
-    my $schema      = $schema_class->connect;
+    my $schema = $schema_class->connect;
 
-    ## Lookup table for source lookups in list_prefetch_allows
-    my %name_to_source =
-      map { $schema->source($_)->name => $_ } $schema->sources;
-
-    my $path_app =
-      File::Spec->catdir( $FindBin::Bin, "..", "lib", split(/::/, $helper->{app}) );
+    my $path_app = File::Spec->catdir( $FindBin::Bin, "..", "lib",
+        split( /::/, $helper->{app} ) );
 
     ## Make api base
-    my $api_file = File::Spec->catfile( $path_app, $helper->{type}, "API.pm" );
+    my $api_file
+        = File::Spec->catfile( $path_app, $helper->{type}, "API.pm" );
 
     ( my $api_path = $api_file ) =~ s/\.pm$//;
     $helper->mk_dir($api_path);
@@ -218,8 +217,8 @@ sub mk_compclass {
     $helper->_mk_comptest;
 
     ## Make rest base
-    my $rest_file =
-      File::Spec->catfile( $path_app, $helper->{type}, "API", "REST.pm" );
+    my $rest_file
+        = File::Spec->catfile( $path_app, $helper->{type}, "API", "REST.pm" );
 
     ( my $rest_path = $rest_file ) =~ s/\.pm$//;
     $helper->mk_dir($rest_path);
@@ -228,8 +227,8 @@ sub mk_compclass {
     $helper->_mk_comptest;
 
     ## Make controller base
-    my $base_file =
-      File::Spec->catfile( $path_app, "ControllerBase", "REST.pm" );
+    my $base_file
+        = File::Spec->catfile( $path_app, "ControllerBase", "REST.pm" );
 
     $helper->mk_dir( File::Spec->catdir( $path_app, "ControllerBase" ) );
     $helper->render_file( 'controllerbase', $base_file );
@@ -239,11 +238,15 @@ sub mk_compclass {
     ## Make result class controllers
     for my $source ( $schema->sources ) {
         my ( $class, $result_class );
-        my $file =
-          File::Spec->catfile( $path_app, $helper->{type}, "API", "REST",
+        my $file
+            = File::Spec->catfile( $path_app, $helper->{type}, "API", "REST",
             $source . ".pm" );
-        $class =
-          $helper->{app} . "::" . $helper->{type} . "::API::REST::" . $source;
+        $class
+            = $helper->{app} . "::"
+            . $helper->{type}
+            . "::API::REST::"
+            . $source;
+
         #$result_class = $helper->{app} . "::Model::DB::" . $source;
         $result_class = $model_base . '::' . $source;
 
@@ -252,56 +255,56 @@ sub mk_compclass {
         my @create_allows;
         my @update_allows;
         my @list_prefetch;
-        my @list_search_exposes = my @list_returns =
-          $schema->source($source)->columns;
+        my @list_search_exposes = my @list_returns
+            = $schema->source($source)->columns;
 
         ### HAIRY RELATIONSHIPS STUFF
-        my @sub_list_search_exposes = my @list_prefetch_allows =
-          _return_has_many_list( $schema->source($source)->_relationships );
+        my @sub_list_search_exposes = my @list_prefetch_allows
+            = _return_has_many_list(
+            $schema->source($source)->_relationships );
         @list_prefetch_allows = map {
             my $ref = $_;
-            qq|[qw/$ref->[0]/], { | 
-              . qq| '$ref->[0]' => [qw/|
-              . join(
+            qq|[qw/$ref->[0]/], { |
+                . qq| '$ref->[0]' => [qw/|
+                . join(
                 ' ',
                 map { $_->[0] } _return_has_many_list(
                     $schema->source( $ref->[1] )->_relationships
                 )
-              ) . qq|/] },\n\t\t|;
+                ) . qq|/] },\n\t\t|;
         } @list_prefetch_allows;
 
         @sub_list_search_exposes = map {
             my $ref = $_;
             qq|{ '$ref->[0]' => [qw/|
-              . join( ' ', $schema->source( $ref->[1] )->columns )
-              . qq|/] },\n\t\t|;
+                . join( ' ', $schema->source( $ref->[1] )->columns )
+                . qq|/] },\n\t\t|;
         } @sub_list_search_exposes;
         ### END HAIRY RELATIONSHIP STUFF
 
         my @list_ordered_by = $schema->source($source)->primary_columns;
 
         ### Prepare hash of column info for this class, so we can extract config
-        my %source_col_info =
-          map { $_, $schema->source($source)->column_info($_) }
-          $schema->source($source)->columns;
+        my %source_col_info
+            = map { $_, $schema->source($source)->column_info($_) }
+            $schema->source($source)->columns;
         for my $k ( sort keys %source_col_info ) {
             no warnings qw/uninitialized/;
-            if (
-                ( !$source_col_info{$k}->{'is_auto_increment'} )
+            if (( !$source_col_info{$k}->{'is_auto_increment'} )
                 && !(
-                    $source_col_info{$k}->{'default_value'} =~
-                    /(nextval|sequence|timestamp)/
+                    $source_col_info{$k}->{'default_value'}
+                    =~ /(nextval|sequence|timestamp)/
                 )
-              )
+                )
             {
 
                 ### Extract create required
                 push @create_requires, $k
-                  if !$source_col_info{$k}->{'is_nullable'};
+                    if !$source_col_info{$k}->{'is_nullable'};
 
                 ### Extract create_allowed
                 push @create_allows, $k
-                  if $source_col_info{$k}->{'is_nullable'};
+                    if $source_col_info{$k}->{'is_nullable'};
             }
             else { }
             @update_allows = ( @create_requires, @create_allows );
@@ -309,20 +312,21 @@ sub mk_compclass {
 
         $helper->{class}        = $class;
         $helper->{result_class} = $model_base . '::' . $source;
-        $helper->{class_name} = $schema->source_registrations->{$source}->name;
-        $helper->{file}       = $file;
+        $helper->{class_name}
+            = $schema->source_registrations->{$source}->name;
+        $helper->{file}                = $file;
         $helper->{create_requires}     = join( ' ', @create_requires );
         $helper->{create_allows}       = join( ' ', @create_allows );
         $helper->{list_returns}        = join( ' ', @list_returns );
         $helper->{list_search_exposes} = join( ' ', @list_search_exposes );
-        $helper->{sub_list_search_exposes} =
-          join( '', @sub_list_search_exposes );
+        $helper->{sub_list_search_exposes}
+            = join( '', @sub_list_search_exposes );
         $helper->{update_allows}        = join( ' ', @update_allows );
         $helper->{list_prefetch_allows} = join( '',  @list_prefetch_allows )
-          if scalar @list_prefetch_allows > 0;
-        $helper->{list_prefetch} =
-          join( ', ', map { qq|'$_->[0]'| } @list_prefetch )
-          if scalar @list_prefetch > 0;
+            if scalar @list_prefetch_allows > 0;
+        $helper->{list_prefetch}
+            = join( ', ', map {qq|'$_->[0]'|} @list_prefetch )
+            if scalar @list_prefetch > 0;
         $helper->{list_ordered_by} = join( ' ', @list_ordered_by );
         $helper->render_file( 'compclass', $file );
         $helper->{test} = $helper->next_test($source);
@@ -333,8 +337,9 @@ sub mk_compclass {
 sub _return_has_many_list {
     my ($relationships) = @_;
     return
-      grep { $relationships->{ $_->[0] }->{attrs}->{accessor} =~ /multi/ }
-      map { [ $_, $relationships->{$_}->{source} ] } sort keys %$relationships;
+        grep { $relationships->{ $_->[0] }->{attrs}->{accessor} =~ /multi/ }
+        map { [ $_, $relationships->{$_}->{source} ] }
+        sort keys %$relationships;
 }
 
 1;
@@ -381,7 +386,7 @@ use parent qw/Catalyst::Controller::DBIC::API::REST/;
 sub create :Private {
 my ($self, $c) = @_;
 $self->next::method($c);
-    if ($c->stash->{created_object}) {    
+    if ($c->stash->{created_object}) {
         %{$c->stash->{response}->{new_object}} = $c->stash->{created_object}->get_columns;
     }
 }
@@ -397,27 +402,35 @@ use JSON::XS;
 use parent qw/[% app %]::ControllerBase::REST/;
 
 __PACKAGE__->config(
+    # Define parent chain action and partpath
     action                  =>  { setup => { PathPart => '[% class_name  %]', Chained => '/api/rest/rest_base' } },
-                                # define parent chain action and partpath
-    class                   =>  '[% result_class %]', # DBIC result class
-    create_requires         =>  [qw/[% create_requires %]/], # columns required to create
-    create_allows           =>  [qw/[% create_allows %]/], # additional non-required columns that create allows
-    update_allows           =>  [qw/[% update_allows %]/], # columns that update allows
-    list_returns            =>  [qw/[% list_returns %]/], # columns that list returns
+    # DBIC result class
+    class                   =>  '[% result_class %]',
+    # Columns required to create
+    create_requires         =>  [qw/[% create_requires %]/],
+    # Additional non-required columns that create allows
+    create_allows           =>  [qw/[% create_allows %]/],
+    # Columns that update allows
+    update_allows           =>  [qw/[% update_allows %]/],
+    # Columns that list returns
+    list_returns            =>  [qw/[% list_returns %]/],
 [% IF list_prefetch %]
-    list_prefetch           =>  [[% list_prefetch %]], # relationships prefetched by default  
+    # relationships prefetched by default
+    list_prefetch           =>  [[% list_prefetch %]],
 [% END %]
 [% IF list_prefetch_allows %]
-    list_prefetch_allows    =>  [ # every possible prefetch param allowed
+    # Every possible prefetch param allowed
+    list_prefetch_allows    =>  [
         [% list_prefetch_allows %]
     ],
 [% END %]
-    list_ordered_by         => [qw/[% list_ordered_by %]/], # order of generated list
+    # Order of generated list
+    list_ordered_by         => [qw/[% list_ordered_by %]/],
+    # columns that can be searched on via list
     list_search_exposes     => [
         qw/[% list_search_exposes %]/,
         [% sub_list_search_exposes %]
-    ], # columns that can be searched on via list
-);
+    ],);
 
 =head1 NAME
 

@@ -1,4 +1,4 @@
-package # hide from PAUSE 
+package # hide from PAUSE
     RestTest::Schema::Result::CD_to_Producer;
 
 use strict;

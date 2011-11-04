@@ -18,24 +18,24 @@ __PACKAGE__->config(
 
     list_prefetch_allows    =>  [ # every possible prefetch param allowed
         [qw/cd_to_producer/], {  'cd_to_producer' => [qw//] },
-		[qw/tags/], {  'tags' => [qw//] },
-		[qw/tracks/], {  'tracks' => [qw//] },
-		
+        [qw/tags/], {  'tags' => [qw//] },
+        [qw/tracks/], {  'tracks' => [qw//] },
+
     ],
 
     list_ordered_by         => [qw/cdid/], # order of generated list
     list_search_exposes     => [
         qw/cdid artist title year/,
         { 'cd_to_producer' => [qw/cd producer/] },
-		{ 'tags' => [qw/tagid cd tag/] },
-		{ 'tracks' => [qw/trackid cd position title last_updated_on/] },
-		
+        { 'tags' => [qw/tagid cd tag/] },
+        { 'tracks' => [qw/trackid cd position title last_updated_on/] },
+
     ], # columns that can be searched on via list
 );
 
 =head1 NAME
 
- - REST Controller for 
+ - REST Controller for
 
 =head1 DESCRIPTION
 

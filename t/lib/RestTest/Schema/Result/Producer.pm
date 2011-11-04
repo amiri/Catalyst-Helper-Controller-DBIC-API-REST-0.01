@@ -1,4 +1,4 @@
-package # hide from PAUSE 
+package # hide from PAUSE
     RestTest::Schema::Result::Producer;
 
 use strict;
@@ -15,7 +15,7 @@ __PACKAGE__->add_columns(
   'name' => {
     data_type => 'varchar',
     size      => 100,
-	default_value => 'fred'
+    default_value => 'fred'
   },
 );
 __PACKAGE__->set_primary_key('producerid');

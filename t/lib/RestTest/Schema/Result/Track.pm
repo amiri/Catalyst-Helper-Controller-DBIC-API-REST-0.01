@@ -1,4 +1,4 @@
-package # hide from PAUSE 
+package # hide from PAUSE
     RestTest::Schema::Result::Track;
 
 use strict;
@@ -17,7 +17,7 @@ __PACKAGE__->add_columns(
   'position' => {
     data_type => 'integer',
     accessor => 'pos',
-	default_value => 0
+    default_value => 0
   },
   'title' => {
     data_type => 'varchar',

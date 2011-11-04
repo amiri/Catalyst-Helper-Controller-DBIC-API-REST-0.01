@@ -38,7 +38,7 @@ sub default : Private {
 
 Attempt to render a view, if needed.
 
-=cut 
+=cut
 
 sub end : Private {}
 

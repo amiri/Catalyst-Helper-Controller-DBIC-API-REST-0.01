@@ -13,12 +13,12 @@ DBICTest - Library to be used by DBIx::Class test scripts.
   use lib qw(t/lib);
   use DBICTest;
   use Test::More;
-  
+
   my $schema = DBICTest->init_schema();
 
 =head1 DESCRIPTION
 
-This module provides the basic utilities to write tests against 
+This module provides the basic utilities to write tests against
 DBIx::Class.
 
 =head1 METHODS
@@ -30,13 +30,13 @@ DBIx::Class.
     no_populate=>1,
   );
 
-This method removes the test SQLite database in t/var/DBIxClass.db 
+This method removes the test SQLite database in t/var/DBIxClass.db
 and then creates a new, empty database.
 
-This method will call deploy_schema() by default, unless the 
+This method will call deploy_schema() by default, unless the
 no_deploy flag is set.
 
-Also, by default, this method will call populate_schema() by 
+Also, by default, this method will call populate_schema() by
 default, unless the no_deploy or no_populate flags are set.
 
 =cut
@@ -120,7 +120,7 @@ sub clear_schema {
 
   DBICTest->populate_schema( $schema );
 
-After you deploy your schema you can use this method to populate 
+After you deploy your schema you can use this method to populate
 the tables with test data.
 
 =cut
