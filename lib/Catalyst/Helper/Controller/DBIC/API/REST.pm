@@ -1,5 +1,6 @@
 package Catalyst::Helper::Controller::DBIC::API::REST;
 
+use Class::Load;
 use namespace::autoclean;
 
 use strict;
@@ -200,7 +201,7 @@ sub mk_compclass {
     $helper->{appprefix} = Catalyst::Utils::appprefix( $helper->{name} );
 
     ## Connect to schema for class info
-    Class::MOP::load_class($schema_class);
+    Class::Load::load_class($schema_class);
     my $schema = $schema_class->connect;
 
     my $path_app = File::Spec->catdir( $FindBin::Bin, "..", "lib",
