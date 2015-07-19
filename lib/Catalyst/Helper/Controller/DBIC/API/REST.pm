@@ -199,6 +199,7 @@ sub mk_compclass {
 
     $helper->{script} = File::Spec->catdir( $helper->{dir}, 'script' );
     $helper->{appprefix} = Catalyst::Utils::appprefix( $helper->{name} );
+    my @path_to_name = split( /::/, $helper->{name} );
 
     ## Connect to schema for class info
     Class::Load::load_class($schema_class);
@@ -236,16 +237,18 @@ sub mk_compclass {
     $helper->{test} = $helper->next_test('controller_base');
     $helper->_mk_comptest;
 
+    $helper->mk_dir( File::Spec->catdir( $path_app, $helper->{type}, @path_to_name ));
+
     ## Make result class controllers
     for my $source ( $schema->sources ) {
         my ( $class, $result_class );
         my $file
-            = File::Spec->catfile( $path_app, $helper->{type}, "API", "REST",
+            = File::Spec->catfile( $path_app, $helper->{type}, @path_to_name,
             $source . ".pm" );
         $class
             = $helper->{app} . "::"
             . $helper->{type}
-            . "::API::REST::"
+            . "::" . join("::", @path_to_name) ."::"
             . $source;
 
         #$result_class = $helper->{app} . "::Model::DB::" . $source;
@@ -313,6 +316,7 @@ sub mk_compclass {
 
         $helper->{class}        = $class;
         $helper->{result_class} = $model_base . '::' . $source;
+        $helper->{path_class_name} = join("/", (map {lc} @path_to_name[ 2 .. (scalar @path_to_name - 1)]), $schema->source_registrations->{$source}->name);
         $helper->{class_name}
             = $schema->source_registrations->{$source}->name;
         $helper->{file}                = $file;
@@ -404,7 +408,7 @@ use parent qw/[% app %]::ControllerBase::REST/;
 
 __PACKAGE__->config(
     # Define parent chain action and partpath
-    action                  =>  { setup => { PathPart => '[% class_name  %]', Chained => '/api/rest/rest_base' } },
+    action                  =>  { setup => { PathPart => '[% path_class_name  %]', Chained => '/api/rest/rest_base' } },
     # DBIC result class
     class                   =>  '[% result_class %]',
     # Columns required to create
