@@ -8,6 +8,7 @@ use warnings;
 
 use FindBin;
 use File::Spec;
+use Path::Tiny;
 
 use lib "$FindBin::Bin/../lib";
 
@@ -244,7 +245,8 @@ sub mk_compclass {
         my ( $class, $result_class );
         my $file
             = File::Spec->catfile( $path_app, $helper->{type}, @path_to_name,
-            $source . ".pm" );
+            split(/::/, $source . ".pm") );
+        Path::Tiny::path($file)->parent()->mkpath;
         $class
             = $helper->{app} . "::"
             . $helper->{type}
@@ -316,7 +318,7 @@ sub mk_compclass {
 
         $helper->{class}        = $class;
         $helper->{result_class} = $model_base . '::' . $source;
-        $helper->{path_class_name} = join("/", (map {lc} @path_to_name[ 2 .. (scalar @path_to_name - 1)]), $schema->source_registrations->{$source}->name);
+        $helper->{path_class_name} = join("/", (map {lc} @path_to_name[ 2 .. (scalar @path_to_name - 1)]), split(/::/, $schema->source_registrations->{$source}->name));
         $helper->{class_name}
             = $schema->source_registrations->{$source}->name;
         $helper->{file}                = $file;
