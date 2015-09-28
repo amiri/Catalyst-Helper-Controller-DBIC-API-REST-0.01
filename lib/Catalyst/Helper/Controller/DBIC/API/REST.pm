@@ -243,8 +243,6 @@ sub mk_compclass {
 
     ## Make result class controllers
     for my $source ( $schema->sources ) {
-        print $source, "\n";
-        print "Nombre: " . $schema->source_registrations->{$source}->name, "\n";
         my ( $class, $result_class );
         my $file
             = File::Spec->catfile( $path_app, $helper->{type}, @path_to_name,
