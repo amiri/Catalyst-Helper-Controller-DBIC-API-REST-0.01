@@ -192,7 +192,8 @@ it under the same terms as Perl itself.
 =cut
 
 sub mk_compclass {
-    my ( $self, $helper, $schema_class, $model ) = @_;
+    my ( $self, $helper, $schema_class, $model, @extra_options ) = @_;
+    my %extra_options = map {split /=/} @extra_options;
 
     $schema_class ||= $helper->{app} . '::Schema';
     $model        ||= $helper->{app} . '::Model::DB';
@@ -317,8 +318,11 @@ sub mk_compclass {
             @update_allows = ( @create_requires, @create_allows );
         }
 
-        $helper->{class}        = $class;
-        $helper->{result_class} = $model_base . '::' . $source;
+        $helper->{package}        = $class;
+        $helper->{class} = $model_base . '::' . $source;
+        if (defined $extra_options{'result_class'}) {
+            $helper->{result_class} = $extra_options{'result_class'};
+        }
         $helper->{path_class_name} = join("/", (map {lc} @path_to_name[ 2 .. (scalar @path_to_name - 1)]), split(/::|\./, $schema->source_registrations->{$source}->name));
         $helper->{class_name}
             = List::Util::first {1;} reverse split(/::/, $schema->source_registrations->{$source}->name);
@@ -401,7 +405,7 @@ $self->next::method($c);
 
 1;
 __compclass__
-package [% class %];
+package [% package %];
 
 use strict;
 use warnings;
@@ -413,7 +417,10 @@ __PACKAGE__->config(
     # Define parent chain action and partpath
     action                  =>  { setup => { PathPart => '[% path_class_name  %]', Chained => '/api/rest/rest_base' } },
     # DBIC result class
-    class                   =>  '[% result_class %]',
+    class                   =>  '[% class %]',
+[% IF result_class %]
+    result_class            =>  '[% result_class %]',
+[% END %]
     # Columns required to create
     create_requires         =>  [qw/[% create_requires %]/],
     # Additional non-required columns that create allows
@@ -442,7 +449,7 @@ __PACKAGE__->config(
 
 =head1 NAME
 
-[% CLASS %] - REST Controller for [% schema_class %]
+[% PACKAGE %] - REST Controller for [% schema_class %]
 
 =head1 DESCRIPTION
 
