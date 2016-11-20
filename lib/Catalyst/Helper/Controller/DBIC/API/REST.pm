@@ -170,11 +170,13 @@ Catalyst::Helper::Controller::DBIC::API::REST
 
 =head1 AUTHOR
 
-Amiri Barksdale E<lt>amiri@arisdottle.netE<gt>
+Amiri Barksdale E<lt>amiri@roosterpirates.comE<gt>
 
 =head1 CONTRIBUTORS
 
 Franck Cuny (lumberjaph) <franck@lumberjaph.net>
+
+Pablo Rodríguez González <pablo.rodriguez.gonzalez@gmail.com>
 
 Chris Weyl (RsrchBoy) <cweyl@alumni.drew.edu>
 

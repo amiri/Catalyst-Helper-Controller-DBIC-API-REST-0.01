@@ -7,3 +7,4 @@ src
 blib
 *.tmp
 *.old
+t/var/DBIxClass.db
