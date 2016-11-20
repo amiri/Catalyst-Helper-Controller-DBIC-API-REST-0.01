@@ -8,6 +8,8 @@ use warnings;
 
 use FindBin;
 use File::Spec;
+use Path::Tiny;
+use List::Util;
 
 use lib "$FindBin::Bin/../lib";
 
@@ -190,7 +192,8 @@ it under the same terms as Perl itself.
 =cut
 
 sub mk_compclass {
-    my ( $self, $helper, $schema_class, $model ) = @_;
+    my ( $self, $helper, $schema_class, $model, @extra_options ) = @_;
+    my %extra_options = map {split /=/} @extra_options;
 
     $schema_class ||= $helper->{app} . '::Schema';
     $model        ||= $helper->{app} . '::Model::DB';
@@ -199,6 +202,7 @@ sub mk_compclass {
 
     $helper->{script} = File::Spec->catdir( $helper->{dir}, 'script' );
     $helper->{appprefix} = Catalyst::Utils::appprefix( $helper->{name} );
+    my @path_to_name = split( /::/, $helper->{name} );
 
     ## Connect to schema for class info
     Class::Load::load_class($schema_class);
@@ -236,16 +240,19 @@ sub mk_compclass {
     $helper->{test} = $helper->next_test('controller_base');
     $helper->_mk_comptest;
 
+    $helper->mk_dir( File::Spec->catdir( $path_app, $helper->{type}, @path_to_name ));
+
     ## Make result class controllers
     for my $source ( $schema->sources ) {
         my ( $class, $result_class );
         my $file
-            = File::Spec->catfile( $path_app, $helper->{type}, "API", "REST",
-            $source . ".pm" );
+            = File::Spec->catfile( $path_app, $helper->{type}, @path_to_name,
+            split(/::/, $source . ".pm") );
+        Path::Tiny::path($file)->parent()->mkpath;
         $class
             = $helper->{app} . "::"
             . $helper->{type}
-            . "::API::REST::"
+            . "::" . join("::", @path_to_name) ."::"
             . $source;
 
         #$result_class = $helper->{app} . "::Model::DB::" . $source;
@@ -311,10 +318,14 @@ sub mk_compclass {
             @update_allows = ( @create_requires, @create_allows );
         }
 
-        $helper->{class}        = $class;
-        $helper->{result_class} = $model_base . '::' . $source;
+        $helper->{package}        = $class;
+        $helper->{class} = $model_base . '::' . $source;
+        if (defined $extra_options{'result_class'}) {
+            $helper->{result_class} = $extra_options{'result_class'};
+        }
+        $helper->{path_class_name} = join("/", (map {lc} @path_to_name[ 2 .. (scalar @path_to_name - 1)]), split(/::|\./, $schema->source_registrations->{$source}->name));
         $helper->{class_name}
-            = $schema->source_registrations->{$source}->name;
+            = List::Util::first {1;} reverse split(/::/, $schema->source_registrations->{$source}->name);
         $helper->{file}                = $file;
         $helper->{create_requires}     = join( ' ', @create_requires );
         $helper->{create_allows}       = join( ' ', @create_allows );
@@ -394,7 +405,7 @@ $self->next::method($c);
 
 1;
 __compclass__
-package [% class %];
+package [% package %];
 
 use strict;
 use warnings;
@@ -404,9 +415,12 @@ use parent qw/[% app %]::ControllerBase::REST/;
 
 __PACKAGE__->config(
     # Define parent chain action and partpath
-    action                  =>  { setup => { PathPart => '[% class_name  %]', Chained => '/api/rest/rest_base' } },
+    action                  =>  { setup => { PathPart => '[% path_class_name  %]', Chained => '/api/rest/rest_base' } },
     # DBIC result class
-    class                   =>  '[% result_class %]',
+    class                   =>  '[% class %]',
+[% IF result_class %]
+    result_class            =>  '[% result_class %]',
+[% END %]
     # Columns required to create
     create_requires         =>  [qw/[% create_requires %]/],
     # Additional non-required columns that create allows
@@ -435,7 +449,7 @@ __PACKAGE__->config(
 
 =head1 NAME
 
-[% CLASS %] - REST Controller for [% schema_class %]
+[% PACKAGE %] - REST Controller for [% schema_class %]
 
 =head1 DESCRIPTION
 
