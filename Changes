@@ -3,6 +3,8 @@ Revison history for {{$dist->name}}
 
 {{$NEXT}}
 
+0.09      2016-11-20
+
         - Allow sub paths. (pablrod)
           https://github.com/amiri/Catalyst-Helper-Controller-DBIC-API-REST-0.01/pull/3
 
