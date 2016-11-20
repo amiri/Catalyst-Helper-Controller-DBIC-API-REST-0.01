@@ -7,28 +7,36 @@ use JSON::XS;
 use parent qw/RestTest::ControllerBase::REST/;
 
 __PACKAGE__->config(
+    # Define parent chain action and partpath
     action                  =>  { setup => { PathPart => 'producer', Chained => '/api/rest/rest_base' } },
-                                # define parent chain action and partpath
-    class                   =>  'DB::Producer', # DBIC result class
-    create_requires         =>  [qw/name/], # columns required to create
-    create_allows           =>  [qw//], # additional non-required columns that create allows
-    update_allows           =>  [qw/name/], # columns that update allows
-    list_returns            =>  [qw/producerid name/], # columns that list returns
+    # DBIC result class
+    class                   =>  'DB::Producer',
+
+    # Columns required to create
+    create_requires         =>  [qw/name/],
+    # Additional non-required columns that create allows
+    create_allows           =>  [qw//],
+    # Columns that update allows
+    update_allows           =>  [qw/name/],
+    # Columns that list returns
+    list_returns            =>  [qw/producerid name/],
 
 
-    list_prefetch_allows    =>  [ # every possible prefetch param allowed
+    # Every possible prefetch param allowed
+    list_prefetch_allows    =>  [
         [qw/cd_to_producer/], {  'cd_to_producer' => [qw//] },
-        [qw/tags/], {  'tags' => [qw//] },
-        [qw/tracks/], {  'tracks' => [qw//] },
+		[qw/tags/], {  'tags' => [qw//] },
+		[qw/tracks/], {  'tracks' => [qw//] },
 
     ],
 
-    list_ordered_by         => [qw/producerid/], # order of generated list
+    # Order of generated list
+    list_ordered_by         => [qw/producerid/],
+    # columns that can be searched on via list
     list_search_exposes     => [
         qw/producerid name/,
 
-    ], # columns that can be searched on via list
-);
+    ],);
 
 =head1 NAME
 
@@ -40,7 +48,7 @@ REST Methods to access the DBIC Result Class producer
 
 =head1 AUTHOR
 
-amiri,,,
+Amiri Barksdale,,,
 
 =head1 SEE ALSO
 

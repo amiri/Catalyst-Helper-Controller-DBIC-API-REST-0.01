@@ -22,6 +22,8 @@ BEGIN {
 
 Catalyst::Helper::Controller::DBIC::API::REST
 
+=encoding UTF-8
+
 =head1 SYNOPSIS
 
     $ catalyst.pl MyApp
@@ -202,7 +204,7 @@ sub mk_compclass {
 
     ( my $model_base = $model ) =~ s/^.*::Model:://;
 
-    $helper->{script} = File::Spec->catdir( $helper->{dir}, 'script' );
+    $helper->{script} = File::Spec->catdir( $helper->{dir}, 'script' ) if $helper->{dir};
     $helper->{appprefix} = Catalyst::Utils::appprefix( $helper->{name} );
     my @path_to_name = split( /::/, $helper->{name} );
 

@@ -7,28 +7,34 @@ use JSON::XS;
 use parent qw/RestTest::ControllerBase::REST/;
 
 __PACKAGE__->config(
+    # Define parent chain action and partpath
     action                  =>  { setup => { PathPart => 'cd_to_producer', Chained => '/api/rest/rest_base' } },
-                                # define parent chain action and partpath
-    class                   =>  'DB::CD_to_Producer', # DBIC result class
-    create_requires         =>  [qw/cd producer/], # columns required to create
-    create_allows           =>  [qw//], # additional non-required columns that create allows
-    update_allows           =>  [qw/cd producer/], # columns that update allows
-    list_returns            =>  [qw/cd producer/], # columns that list returns
+    # DBIC result class
+    class                   =>  'DB::CD_to_Producer',
+
+    # Columns required to create
+    create_requires         =>  [qw/cd producer/],
+    # Additional non-required columns that create allows
+    create_allows           =>  [qw//],
+    # Columns that update allows
+    update_allows           =>  [qw/cd producer/],
+    # Columns that list returns
+    list_returns            =>  [qw/cd producer/],
 
 
-    list_prefetch_allows    =>  [ # every possible prefetch param allowed
-        [qw/cd_to_producer/], {  'cd_to_producer' => [qw//] },
-        [qw/tags/], {  'tags' => [qw//] },
-        [qw/tracks/], {  'tracks' => [qw//] },
+    # Every possible prefetch param allowed
+    list_prefetch_allows    =>  [
+        [qw/cds/], {  'cds' => [qw/cd_to_producer tags tracks/] },
 
     ],
 
-    list_ordered_by         => [qw/cd producer/], # order of generated list
+    # Order of generated list
+    list_ordered_by         => [qw/cd producer/],
+    # columns that can be searched on via list
     list_search_exposes     => [
         qw/cd producer/,
 
-    ], # columns that can be searched on via list
-);
+    ],);
 
 =head1 NAME
 
@@ -40,7 +46,7 @@ REST Methods to access the DBIC Result Class cd_to_producer
 
 =head1 AUTHOR
 
-amiri,,,
+Amiri Barksdale,,,
 
 =head1 SEE ALSO
 

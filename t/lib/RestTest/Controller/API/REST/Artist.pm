@@ -7,27 +7,35 @@ use JSON::XS;
 use parent qw/RestTest::ControllerBase::REST/;
 
 __PACKAGE__->config(
+    # Define parent chain action and partpath
     action                  =>  { setup => { PathPart => 'artist', Chained => '/api/rest/rest_base' } },
-                                # define parent chain action and partpath
-    class                   =>  'DB::Artist', # DBIC result class
-    create_requires         =>  [qw/name/], # columns required to create
-    create_allows           =>  [qw//], # additional non-required columns that create allows
-    update_allows           =>  [qw/name/], # columns that update allows
-    list_returns            =>  [qw/artistid name/], # columns that list returns
+    # DBIC result class
+    class                   =>  'DB::Artist',
+
+    # Columns required to create
+    create_requires         =>  [qw/name/],
+    # Additional non-required columns that create allows
+    create_allows           =>  [qw//],
+    # Columns that update allows
+    update_allows           =>  [qw/name/],
+    # Columns that list returns
+    list_returns            =>  [qw/artistid name/],
 
 
-    list_prefetch_allows    =>  [ # every possible prefetch param allowed
+    # Every possible prefetch param allowed
+    list_prefetch_allows    =>  [
         [qw/cds/], {  'cds' => [qw/cd_to_producer tags tracks/] },
 
     ],
 
-    list_ordered_by         => [qw/artistid/], # order of generated list
+    # Order of generated list
+    list_ordered_by         => [qw/artistid/],
+    # columns that can be searched on via list
     list_search_exposes     => [
         qw/artistid name/,
         { 'cds' => [qw/cdid artist title year/] },
 
-    ], # columns that can be searched on via list
-);
+    ],);
 
 =head1 NAME
 
@@ -39,7 +47,7 @@ REST Methods to access the DBIC Result Class artist
 
 =head1 AUTHOR
 
-amiri,,,
+Amiri Barksdale,,,
 
 =head1 SEE ALSO
 

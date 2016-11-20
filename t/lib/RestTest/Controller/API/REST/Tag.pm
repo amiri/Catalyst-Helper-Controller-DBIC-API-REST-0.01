@@ -7,26 +7,36 @@ use JSON::XS;
 use parent qw/RestTest::ControllerBase::REST/;
 
 __PACKAGE__->config(
+    # Define parent chain action and partpath
     action                  =>  { setup => { PathPart => 'tags', Chained => '/api/rest/rest_base' } },
-                                # define parent chain action and partpath
-    class                   =>  'DB::Tag', # DBIC result class
-    create_requires         =>  [qw/cd tag/], # columns required to create
-    create_allows           =>  [qw//], # additional non-required columns that create allows
-    update_allows           =>  [qw/cd tag/], # columns that update allows
-    list_returns            =>  [qw/tagid cd tag/], # columns that list returns
+    # DBIC result class
+    class                   =>  'DB::Tag',
+
+    # Columns required to create
+    create_requires         =>  [qw/cd tag/],
+    # Additional non-required columns that create allows
+    create_allows           =>  [qw//],
+    # Columns that update allows
+    update_allows           =>  [qw/cd tag/],
+    # Columns that list returns
+    list_returns            =>  [qw/tagid cd tag/],
 
 
-    list_prefetch_allows    =>  [ # every possible prefetch param allowed
-        [qw/cds/], {  'cds' => [qw/cd_to_producer tags tracks/] },
+    # Every possible prefetch param allowed
+    list_prefetch_allows    =>  [
+        [qw/cd_to_producer/], {  'cd_to_producer' => [qw//] },
+		[qw/tags/], {  'tags' => [qw//] },
+		[qw/tracks/], {  'tracks' => [qw//] },
 
     ],
 
-    list_ordered_by         => [qw/tagid/], # order of generated list
+    # Order of generated list
+    list_ordered_by         => [qw/tagid/],
+    # columns that can be searched on via list
     list_search_exposes     => [
         qw/tagid cd tag/,
 
-    ], # columns that can be searched on via list
-);
+    ],);
 
 =head1 NAME
 
@@ -38,7 +48,7 @@ REST Methods to access the DBIC Result Class tags
 
 =head1 AUTHOR
 
-amiri,,,
+Amiri Barksdale,,,
 
 =head1 SEE ALSO
 
